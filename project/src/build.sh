@@ -7,6 +7,7 @@ javac cz/cuni/mff/java/graphs/*.java
 echo "Hotovo"
 
 echo " * Vytvoření dokumentace"
+mkdir -p docs/
 javadoc cz/cuni/mff/java/graphs/*.java -d docs
 echo "    Hotovo"
 
