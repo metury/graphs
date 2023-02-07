@@ -31,7 +31,7 @@ public class Graph{
 	 * @param value Is the value of the vertex.
 	 * @param id Is the id of the new vertex. Has to be one bigger than the number of vertices.
 	 * @return Id of the newly constructed vertex.
-	 * @throws cz.cuni.mff.java.graphs.WrongIDException
+	 * @throws cz.cuni.mff.java.graphs.WrongIDException If the given id is wrong.
 	 */
 	public int addVertex(double value, int id) throws WrongIDException{
 		Vertex v = new Vertex(value);
@@ -46,7 +46,7 @@ public class Graph{
 	 * Add vertex to the graph, id is automaticaly given.
 	 * @param value The value of the vertex.
 	 * @return Id of the newly constructed vertex.
-	 * @throws cz.cuni.mff.java.graphs.WrongIDException
+	 * @throws cz.cuni.mff.java.graphs.WrongIDException If the given id is wrong.
 	 */
 	public int addVertex(double value) throws WrongIDException{
 		return addVertex(value, vertices.size());
@@ -54,7 +54,7 @@ public class Graph{
 	/**
 	 * Add vertex to the graph, id is automatic and no value is given.
 	 * @return Id of the newly constructed vertex.
-	 * @throws cz.cuni.mff.java.graphs.WrongIDException
+	 * @throws cz.cuni.mff.java.graphs.WrongIDException If the given id is wrong.
 	 */
 	public int addVertex() throws WrongIDException{
 		return addVertex(Double.NaN, vertices.size());
@@ -66,8 +66,8 @@ public class Graph{
 	 * @param to Is the id of the vertex where the edge is ending.
 	 * @param id Is the id of the edge. Has to be one more than the number of vertices.
 	 * @return Id of the newly constructed edge.
-	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex
-	 * @throws cz.cuni.mff.java.graphs.WrongIDException
+	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex doesn't exist.
+	 * @throws cz.cuni.mff.java.graphs.WrongIDException If the given id is wrong.
 	 */
 	public int addEdge(double value, int from, int to, int id) throws WrongIDException, NonexistingVertex{
 		if(to >= vertices.size() || vertices.get(to) == null ){
@@ -90,8 +90,8 @@ public class Graph{
 	 * @param from Is the id of the vertex where the edge is starting.
 	 * @param to Is the id of the vertex where the edge is ending.
 	 * @return Id of the newly constructed edge.
-	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex
-	 * @throws cz.cuni.mff.java.graphs.WrongIDException
+	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex doesn't exist.
+	 * @throws cz.cuni.mff.java.graphs.WrongIDException If the given id is wrong.
 	 */
 	public int addEdge(double value, int from, int to) throws WrongIDException, NonexistingVertex{
 		return addEdge(value, from, to, edges.size());
@@ -101,8 +101,8 @@ public class Graph{
 	 * @param from Is the id of the vertex where the edge is starting.
 	 * @param to Is the id of the vertex where the edge is ending.
 	 * @return Id of the newly constructed edge.
-	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex
-	 * @throws cz.cuni.mff.java.graphs.WrongIDException
+	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex doesn't exist.
+	 * @throws cz.cuni.mff.java.graphs.WrongIDException If the given id is wrong.
 	 */
 	public int addEdge(int from, int to) throws WrongIDException, NonexistingVertex{
 		return addEdge(Double.NaN, from, to, edges.size());
@@ -111,7 +111,7 @@ public class Graph{
 	 * Get vertex by given id.
 	 * @param id Is the given id of the vertex.
 	 * @return The vertex found.
-	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex
+	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex doesn't exist.
 	 */
 	public Vertex getVertex(int id) throws NonexistingVertex{
 		if(id >= vertices.size() || vertices.get(id) == null){
@@ -123,7 +123,7 @@ public class Graph{
 	 * Get reference to an Edge by its id.
 	 * @param id Is the id of the edge.
 	 * @return The edge with its id.
-	 * @throws cz.cuni.mff.java.graphs.NonexistingEdge
+	 * @throws cz.cuni.mff.java.graphs.NonexistingEdge If the edge doesn't exist.
 	 */
 	public Edge getEdge(int id) throws NonexistingEdge{
 		if(id >= edges.size() || edges.get(id) == null){
@@ -135,7 +135,7 @@ public class Graph{
 	 * Get all the edges incident to the Vertex.
 	 * @param vertexId Is the id of the given vertex.
 	 * @return List of all the edges.
-	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex
+	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex doesn't exist.
 	 */
 	public ArrayList<Edge> getEdgeIncident(int vertexId) throws NonexistingVertex{
 		if(vertexId >= vertices.size() || vertices.get(vertexId) == null){
@@ -146,7 +146,7 @@ public class Graph{
 	/**
 	 * Remove vertex.
 	 * @param id Id of the vertex to be removed.
-	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex
+	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex doesn't exist.
 	 */
 	public void removeVertex(int id) throws NonexistingVertex{
 		if(id >= vertices.size() || vertices.get(id) == null){
@@ -158,7 +158,7 @@ public class Graph{
 	/**
 	 * Remove edge.
 	 * @param id The id of the edge.
-	 * @throws cz.cuni.mff.java.graphs.NonexistingEdge
+	 * @throws cz.cuni.mff.java.graphs.NonexistingEdge If the edge doesn't exist.
 	 */
 	public void removeEdge(int id) throws NonexistingEdge{
 		if(id >= edges.size() || edges.get(id) == null){
