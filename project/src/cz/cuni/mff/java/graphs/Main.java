@@ -4,5 +4,16 @@ class Main{
 	public static void main(String[] args){
 		System.out.println("Spravny package");
 		Graph G = new Graph(true);
+		try{
+			G.addVertex(5,0);
+			G.addVertex(6,1);
+			G.addEdge(3,0,1,0);
+			G.addVertex();
+			G.addVertex(6);
+			G.addEdge(8,1,3);
+			System.out.println(G);
+		} catch(WrongIDException | NonexistingVertex e){
+			System.out.println(e);
+		}
 	}
 }

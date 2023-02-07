@@ -52,4 +52,16 @@ public class Edge{
 	public void contract(){
 		// Delete edge and delete both vertices and make new one.
 	}
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		sb.append(from.getId());
+		sb.append(";");
+		sb.append(value);
+		sb.append(";");
+		sb.append(to.getId());
+		sb.append("]");
+		return sb.toString();
+	}
 }

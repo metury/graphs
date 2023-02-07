@@ -8,14 +8,17 @@ import java.util.ArrayList;
 class Vertex{
 	/** The value of the vertex. */
 	private double value;
+	private int id;
 	/** Incident edges. If the graph is directed, only the outcoming edges are stored. */
 	private ArrayList<Edge> incidentEdges;
 	/**
 	 * Default constructor.
 	 * @param value The value of the vertex.
 	 */
-	public Vertex(double value){
+	public Vertex(double value, int id){
+		incidentEdges = new ArrayList<Edge>();
 		this.value = value;
+		this.id = id;
 	}
 	/**
 	 * Set new value to the vertex.
@@ -44,5 +47,21 @@ class Vertex{
 	 */
 	public ArrayList<Edge> getIncident(){
 		return incidentEdges;
+	}
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("(");
+		sb.append(id);
+		sb.append(";");
+		sb.append(value);
+		sb.append(")");
+		return sb.toString();
+	}
+	public int getId(){
+		return id;
+	}
+	public void setId(int id){
+		this.id = id;
 	}
 }

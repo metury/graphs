@@ -17,6 +17,7 @@ public class Graph{
 	private int edgeCount;
 	/** Number of vertices. */
 	private int vertexCount;
+	private final double SPACE_THRESHOLD = 0.7;
 	/**
 	 * Default constructor.
 	 * @param isDirected If the graph is directed or not.
@@ -34,7 +35,7 @@ public class Graph{
 	 * @throws cz.cuni.mff.java.graphs.WrongIDException If the given id is wrong.
 	 */
 	public int addVertex(double value, int id) throws WrongIDException{
-		Vertex v = new Vertex(value);
+		Vertex v = new Vertex(value, id);
 		if(id == vertices.size()){
 			vertices.add(v);
 			vertexCount++;
@@ -153,7 +154,11 @@ public class Graph{
 			throw new NonexistingVertex(id);
 		}
 		vertexCount--;
-		vertices.add(id, null);
+		vertices.set(id, null);
+		double space =  (double) vertexCount / vertices.size();
+		if(space < SPACE_THRESHOLD){
+			clear();
+		}
 	}
 	/**
 	 * Remove edge.
@@ -165,7 +170,11 @@ public class Graph{
 			throw new NonexistingEdge(id);
 		}
 		edgeCount--;
-		edges.add(id, null);
+		edges.set(id, null);
+		double space =  (double) edgeCount / edges.size();
+		if(space < SPACE_THRESHOLD){
+			clear();
+		}
 	}
 	/**
 	 * Get the number of edges.
@@ -180,5 +189,37 @@ public class Graph{
 	 */
 	public int vertexSize(){
 		return vertexCount;
+	}
+	private void clear(){
+		for(int i = 0; i < vertices.size();){
+		Vertex v = vertices.get(i);
+			if(v == null){
+				vertices.remove(i);
+			}
+			else{
+				v.setId(i++);
+			}
+		}
+		for(int i = 0; i < edges.size();){
+			Edge e = edges.get(i);
+			if(e == null){
+				edges.remove(i);
+			}
+			else{
+				i++;
+			}
+		}
+	}
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		clear();
+		for(Vertex v : vertices){
+			sb.append(v);
+		}
+		for(Edge e : edges){
+			sb.append(e);
+		}
+		return sb.toString();
 	}
 }
