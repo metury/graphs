@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Class for storing data about one vertex.
  */
-class Vertex{
+public class Vertex{
 	/** The value of the vertex. */
 	private double value;
 	/** ID of this vertex. */

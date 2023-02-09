@@ -22,6 +22,7 @@ class Main{
 			G.export("/home/tomas/git/java/project/src/export.txt");
 			G.exportDot("/home/tomas/git/java/project/src/export.dot", "JmenoGrafu");
 			G.importGraph("/home/tomas/git/java/project/src/export.txt");
+			System.out.println(G);
 		} catch(WrongIDException | NonexistingVertex e){
 			System.out.println(e);
 		}

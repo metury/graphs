@@ -29,6 +29,11 @@ public class Graph{
 		edges = new ArrayList<Edge>();
 		directed = isDirected;
 	}
+	public Graph(String fileName){
+		vertices = new ArrayList<Vertex>();
+		edges = new ArrayList<Edge>();
+		importGraph(fileName);
+	}
 	/**
 	 * Add vertex to the graph.
 	 * @param value Is the value of the vertex.
@@ -69,7 +74,7 @@ public class Graph{
 	 * @param to Is the id of the vertex where the edge is ending.
 	 * @param id Is the id of the edge. Has to be one more than the number of vertices.
 	 * @return Id of the newly constructed edge.
-	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex doesn't exist.
+	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex does not exist.
 	 * @throws cz.cuni.mff.java.graphs.WrongIDException If the given id is wrong.
 	 */
 	public int addEdge(double value, int from, int to, int id) throws WrongIDException, NonexistingVertex{
@@ -93,7 +98,7 @@ public class Graph{
 	 * @param from Is the id of the vertex where the edge is starting.
 	 * @param to Is the id of the vertex where the edge is ending.
 	 * @return Id of the newly constructed edge.
-	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex doesn't exist.
+	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex does not exist.
 	 * @throws cz.cuni.mff.java.graphs.WrongIDException If the given id is wrong.
 	 */
 	public int addEdge(double value, int from, int to) throws WrongIDException, NonexistingVertex{
@@ -104,7 +109,7 @@ public class Graph{
 	 * @param from Is the id of the vertex where the edge is starting.
 	 * @param to Is the id of the vertex where the edge is ending.
 	 * @return Id of the newly constructed edge.
-	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex doesn't exist.
+	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex does not exist.
 	 * @throws cz.cuni.mff.java.graphs.WrongIDException If the given id is wrong.
 	 */
 	public int addEdge(int from, int to) throws WrongIDException, NonexistingVertex{
@@ -114,7 +119,7 @@ public class Graph{
 	 * Get vertex by given id.
 	 * @param id Is the given id of the vertex.
 	 * @return The vertex found.
-	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex doesn't exist.
+	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex does not exist.
 	 */
 	public Vertex getVertex(int id) throws NonexistingVertex{
 		if(id >= vertices.size() || vertices.get(id) == null){
@@ -126,7 +131,7 @@ public class Graph{
 	 * Get reference to an Edge by its id.
 	 * @param id Is the id of the edge.
 	 * @return The edge with its id.
-	 * @throws cz.cuni.mff.java.graphs.NonexistingEdge If the edge doesn't exist.
+	 * @throws cz.cuni.mff.java.graphs.NonexistingEdge If the edge does not exist.
 	 */
 	public Edge getEdge(int id) throws NonexistingEdge{
 		if(id >= edges.size() || edges.get(id) == null){
@@ -138,7 +143,7 @@ public class Graph{
 	 * Get all the edges incident to the Vertex.
 	 * @param vertexId Is the id of the given vertex.
 	 * @return List of all the edges.
-	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex doesn't exist.
+	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex does not exist.
 	 */
 	public ArrayList<Edge> getEdgeIncident(int vertexId) throws NonexistingVertex{
 		if(vertexId >= vertices.size() || vertices.get(vertexId) == null){
@@ -149,7 +154,7 @@ public class Graph{
 	/**
 	 * Remove vertex.
 	 * @param id Id of the vertex to be removed.
-	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex doesn't exist.
+	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex does not exist.
 	 */
 	public void removeVertex(int id) throws NonexistingVertex{
 		if(id >= vertices.size() || vertices.get(id) == null){
@@ -165,7 +170,7 @@ public class Graph{
 	/**
 	 * Remove edge.
 	 * @param id The id of the edge.
-	 * @throws cz.cuni.mff.java.graphs.NonexistingEdge If the edge doesn't exist.
+	 * @throws cz.cuni.mff.java.graphs.NonexistingEdge If the edge does not exist.
 	 */
 	public void removeEdge(int id) throws NonexistingEdge{
 		if(id >= edges.size() || edges.get(id) == null){
@@ -308,12 +313,37 @@ public class Graph{
 	 */
 	public boolean importGraph(String filePath){
 		try(BufferedReader in = new BufferedReader(new FileReader(filePath))){
+			vertices.clear();
+			edges.clear();
 			int c;
+			String s = in.readLine();
+			if(s.equals("true")){
+				directed = true;
+			}
+			else{
+				directed = false;
+			}
+			StringBuilder sb = new StringBuilder();
 			while((c = in.read()) != -1){
-				System.out.print((char) c);
+				char ch = (char) c;
+				if( ch != ')' && ch != ']' && ch != '\n'){
+					sb.append(ch);		
+				}
+				else if(ch == ')'){
+					sb.delete(0,1);
+					String[] components = sb.toString().split(";");
+					addVertex(Double.parseDouble(components[1]), Integer.parseInt(components[0]));
+					sb = new StringBuilder();
+				}
+				else if(ch == ']'){
+					sb.delete(0,1);
+					String[] components = sb.toString().split(";");
+					addEdge(Double.parseDouble(components[1]), Integer.parseInt(components[0]), Integer.parseInt(components[2]));
+					sb = new StringBuilder();
+				}
 			}
 			return true;
-		} catch(IOException ioe){
+		} catch(IOException | WrongIDException | NonexistingVertex ioe){
 			System.err.println("Given file " + filePath + " cannot be used.");
 			return false;
 		}
