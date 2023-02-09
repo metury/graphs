@@ -1,6 +1,7 @@
 package cz.cuni.mff.java.graphs;
 
 import java.util.ArrayList;
+import java.io.*;
 
 /**
  * Class holding data for the graph and all methods on graphs.
@@ -17,6 +18,7 @@ public class Graph{
 	private int edgeCount;
 	/** Number of vertices. */
 	private int vertexCount;
+	/** Threshold on how many null ponters can be in arrays, when removing edge or vertex. */
 	private final double SPACE_THRESHOLD = 0.7;
 	/**
 	 * Default constructor.
@@ -190,6 +192,10 @@ public class Graph{
 	public int vertexSize(){
 		return vertexCount;
 	}
+	/**
+	 * Clear all null pointers in both arrays.
+	 * May change some ids of vertices and edges!
+	 */
 	private void clear(){
 		for(int i = 0; i < vertices.size();){
 		Vertex v = vertices.get(i);
@@ -210,16 +216,103 @@ public class Graph{
 			}
 		}
 	}
+	/**
+	 * Get string representing the graph. 
+	 * Vertex - (id;value), Edge - [idFrom;value;idTo]
+	 * @return String representign the graph.
+	 */
 	@Override
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 		clear();
+		sb.append(directed);
+		sb.append("\n");
 		for(Vertex v : vertices){
 			sb.append(v);
 		}
+		sb.append("\n");
 		for(Edge e : edges){
 			sb.append(e);
 		}
 		return sb.toString();
+	}
+	/**
+	 * Export the graph to file.
+	 * @param filePath Path to the expot file.
+	 */
+	public void export(String filePath){
+		try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath))){
+			out.write(this.toString());
+		} catch(IOException ioe){
+			System.err.println("Given file " + filePath + " cannot be used.");
+		}
+	}
+	/**
+	 * Export graph to the DOT language. https://www.graphviz.org/doc/info/lang.html
+	 * @param filePath Path to the export file.
+	 */
+	public void exportDot(String filePath){
+		exportDot(filePath, "GrahpName");
+	}
+	/**
+	 * Export graph to the DOT language. https://www.graphviz.org/doc/info/lang.html
+	 * @param filePath Path to the export file.
+	 * @param graphName Name of the graph.
+	 */
+	public void exportDot(String filePath, String graphName){
+		try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath))){
+			clear();
+			if(directed){
+				out.write("digraph ");
+			}
+			else{
+				out.write("graph ");
+			}
+			out.write(graphName);
+			out.write(" {\n");
+			for(Vertex v : vertices){
+				out.write("\t");
+				out.write(Integer.toString(v.getId()));
+				if(!Double.isNaN(v.getValue())){
+					out.write(" [label=\"" + v.getValue() + "\"]");
+				}
+				out.write(";\n");
+			}
+			for(Edge e : edges){
+				out.write("\t");
+				out.write(Integer.toString(e.getFrom()));
+				if(directed){
+					out.write(" -> ");
+				}
+				else{
+					out.write(" -- ");
+				}
+				out.write(Integer.toString(e.getTo()));
+				if(!Double.isNaN(e.getValue())){
+					out.write(" [label=\"" + e.getValue() + "\"]");
+				}
+				out.write(";\n");
+			}
+			out.write("}");
+		} catch(IOException ioe){
+			System.err.println("Given file " + filePath + " cannot be used.");
+		}
+	}
+	/**
+	 * Import graph from given file in text format.
+	 * @param filePath File to be imported from.
+	 * @return If the import was succesful or not. If the format is correct.
+	 */
+	public boolean importGraph(String filePath){
+		try(BufferedReader in = new BufferedReader(new FileReader(filePath))){
+			int c;
+			while((c = in.read()) != -1){
+				System.out.print((char) c);
+			}
+			return true;
+		} catch(IOException ioe){
+			System.err.println("Given file " + filePath + " cannot be used.");
+			return false;
+		}
 	}
 }

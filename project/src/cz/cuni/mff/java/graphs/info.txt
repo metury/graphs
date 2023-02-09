@@ -3,3 +3,12 @@ Tak jak budeme graf reprezentovat.
 Budeme mít dynamické pole pro vrcholy a pro hrany. Pak taky musíme umět najít hranu incidentní danému vrcholu.
 
 Každý vrchol bude nosit data typu double.
+
+
+Textový formát:
+
+```
+true/false
+Vertices: (id;value)
+Edges: [idFrom;value;idTo]
+```

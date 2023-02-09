@@ -3,7 +3,7 @@ package cz.cuni.mff.java.graphs;
 import java.lang.StringBuilder;
 
 /**
- *
+ * 
  *
  */
 class WrongIDException extends Exception{

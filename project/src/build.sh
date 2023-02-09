@@ -13,3 +13,6 @@ echo "    Hotovo"
 
 echo " * Spuštění"
 java cz.cuni.mff.java.graphs.Main
+
+echo "Dot test"
+dot -Tsvg export.dot > graph.svg

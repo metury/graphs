@@ -8,6 +8,7 @@ import java.util.ArrayList;
 class Vertex{
 	/** The value of the vertex. */
 	private double value;
+	/** ID of this vertex. */
 	private int id;
 	/** Incident edges. If the graph is directed, only the outcoming edges are stored. */
 	private ArrayList<Edge> incidentEdges;
@@ -48,6 +49,10 @@ class Vertex{
 	public ArrayList<Edge> getIncident(){
 		return incidentEdges;
 	}
+	/**
+	 * Override the toString() method for Vertex.
+	 * @return String of this vertex.
+	 */
 	@Override
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
@@ -58,9 +63,17 @@ class Vertex{
 		sb.append(")");
 		return sb.toString();
 	}
+	/**
+	 * Get the ID of this vertex.
+	 * @return The ID.
+	 */
 	public int getId(){
 		return id;
 	}
+	/**
+	 * Set new ID to this vertex, used when removing null pointers.
+	 * @param id New ID.
+	 */
 	public void setId(int id){
 		this.id = id;
 	}

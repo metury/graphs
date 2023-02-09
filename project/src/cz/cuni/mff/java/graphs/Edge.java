@@ -47,11 +47,14 @@ public class Edge{
 	}
 	/**
 	 * Contract this edge.
-	 *
 	 */
 	public void contract(){
 		// Delete edge and delete both vertices and make new one.
 	}
+	/**
+	 * Override toString method for printing edge.
+	 * @return String representing the edge.
+	 */
 	@Override
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
@@ -63,5 +66,19 @@ public class Edge{
 		sb.append(to.getId());
 		sb.append("]");
 		return sb.toString();
+	}
+	/**
+	 * Get the ID of from vertex.
+	 * @return Integer representing vertex 'from'.
+	 */
+	public int getFrom(){
+		return from.getId();
+	}
+	/**
+	 * Get the ID of to vertex.
+	 * @return Integer represenitng vertex 'to'.
+	 */
+	public int getTo(){
+		return to.getId();
 	}
 }
