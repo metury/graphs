@@ -276,6 +276,9 @@ public class Graph{
 				if(!Double.isNaN(v.getValue())){
 					out.write(" [label=\"" + v.getValue() + "\"]");
 				}
+				else{
+					out.write(" [label=\" \"]");
+				}
 				out.write(";\n");
 			}
 			for(Edge e : edges){
