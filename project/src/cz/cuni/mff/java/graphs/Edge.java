@@ -25,10 +25,8 @@ public class Edge{
 		this.to = to;
 		this.directed = directed;
 		from.addEdge(this);
-		to.addEdge(this);
 		if(!directed){
 			to.addEdge(this);
-			from.addEdge(this);
 		}
 	}
 	/**

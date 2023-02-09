@@ -2,12 +2,17 @@ package cz.cuni.mff.java.graphs;
 
 import java.util.ArrayList;
 import java.io.*;
+import java.util.Iterator;
+
+// TODO When clearing null pointers all vertices and edges are renamed (id's are changed). This needs to be resolved.
+// TODO Add simple methods which person can do with graph.
 
 /**
  * Class holding data for the graph and all methods on graphs.
  * Such as building the graph, removing parts, contracting edges and exporting and importing the graph.
+ * This class implements Iterable, so it can be iterated through its vertices.
  */
-public class Graph{
+public class Graph implements Iterable<Vertex>{
 	/** Vertices in graph. If it is removed null is present. */
 	private ArrayList<Vertex> vertices;
 	/** Edges in grap. If one is removed it is replaced by null. */
@@ -29,6 +34,10 @@ public class Graph{
 		edges = new ArrayList<Edge>();
 		directed = isDirected;
 	}
+	/**
+	 * Constructor using import from text file.
+	 * @param fileName Path to the file containing graph.
+	 */
 	public Graph(String fileName){
 		vertices = new ArrayList<Vertex>();
 		edges = new ArrayList<Edge>();
@@ -39,32 +48,26 @@ public class Graph{
 	 * @param value Is the value of the vertex.
 	 * @param id Is the id of the new vertex. Has to be one bigger than the number of vertices.
 	 * @return Id of the newly constructed vertex.
-	 * @throws cz.cuni.mff.java.graphs.WrongIDException If the given id is wrong.
 	 */
-	public int addVertex(double value, int id) throws WrongIDException{
+	public int addVertex(double value, int id){
 		Vertex v = new Vertex(value, id);
-		if(id == vertices.size()){
-			vertices.add(v);
-			vertexCount++;
-			return id;
-		}
-		throw new WrongIDException(id, "vertex");
+		vertices.add(id, v);
+		vertexCount++;
+		return id;
 	}
 	/**
 	 * Add vertex to the graph, id is automaticaly given.
 	 * @param value The value of the vertex.
 	 * @return Id of the newly constructed vertex.
-	 * @throws cz.cuni.mff.java.graphs.WrongIDException If the given id is wrong.
 	 */
-	public int addVertex(double value) throws WrongIDException{
+	public int addVertex(double value){
 		return addVertex(value, vertices.size());
 	}
 	/**
 	 * Add vertex to the graph, id is automatic and no value is given.
 	 * @return Id of the newly constructed vertex.
-	 * @throws cz.cuni.mff.java.graphs.WrongIDException If the given id is wrong.
 	 */
-	public int addVertex() throws WrongIDException{
+	public int addVertex(){
 		return addVertex(Double.NaN, vertices.size());
 	}
 	/**
@@ -75,9 +78,8 @@ public class Graph{
 	 * @param id Is the id of the edge. Has to be one more than the number of vertices.
 	 * @return Id of the newly constructed edge.
 	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex does not exist.
-	 * @throws cz.cuni.mff.java.graphs.WrongIDException If the given id is wrong.
 	 */
-	public int addEdge(double value, int from, int to, int id) throws WrongIDException, NonexistingVertex{
+	public int addEdge(double value, int from, int to, int id) throws NonexistingVertex{
 		if(to >= vertices.size() || vertices.get(to) == null ){
 			throw new NonexistingVertex(to);
 		}
@@ -85,12 +87,9 @@ public class Graph{
 			throw new NonexistingVertex(from);
 		}
 		Edge e = new Edge(value, vertices.get(from), vertices.get(to), directed);
-		if(id == edges.size()){
-			edges.add(e);
-			edgeCount++;
-			return id;
-		}
-		throw new WrongIDException(id, "edge");
+		edges.add(e);
+		edgeCount++;
+		return id;
 	}
 	/**
 	 * Add edge to the graph. Id is given automaticaly.
@@ -99,9 +98,8 @@ public class Graph{
 	 * @param to Is the id of the vertex where the edge is ending.
 	 * @return Id of the newly constructed edge.
 	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex does not exist.
-	 * @throws cz.cuni.mff.java.graphs.WrongIDException If the given id is wrong.
 	 */
-	public int addEdge(double value, int from, int to) throws WrongIDException, NonexistingVertex{
+	public int addEdge(double value, int from, int to) throws NonexistingVertex{
 		return addEdge(value, from, to, edges.size());
 	}
 	/**
@@ -110,9 +108,8 @@ public class Graph{
 	 * @param to Is the id of the vertex where the edge is ending.
 	 * @return Id of the newly constructed edge.
 	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex does not exist.
-	 * @throws cz.cuni.mff.java.graphs.WrongIDException If the given id is wrong.
 	 */
-	public int addEdge(int from, int to) throws WrongIDException, NonexistingVertex{
+	public int addEdge(int from, int to) throws NonexistingVertex{
 		return addEdge(Double.NaN, from, to, edges.size());
 	}
 	/**
@@ -343,9 +340,25 @@ public class Graph{
 				}
 			}
 			return true;
-		} catch(IOException | WrongIDException | NonexistingVertex ioe){
+		} catch(IOException | NonexistingVertex ioe){
 			System.err.println("Given file " + filePath + " cannot be used.");
 			return false;
 		}
+	}
+	/**
+	 * Iterator fo iterating through vertices.
+	 * @return Newly constructed Iterator.
+	 */
+	public Iterator<Vertex> iterator(){
+		clear();
+		return new Iterator<Vertex>(){
+			private int index = 0;
+			public boolean hasNext(){
+				return index < vertices.size();
+			}
+			public Vertex next(){
+				return vertices.get(index++);
+			}
+		};
 	}
 }

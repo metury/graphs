@@ -1,11 +1,13 @@
 package cz.cuni.mff.java.graphs;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Class for storing data about one vertex.
+ * Implements Iterable through its incident edges.
  */
-public class Vertex{
+public class Vertex implements Iterable<Edge>{
 	/** The value of the vertex. */
 	private double value;
 	/** ID of this vertex. */
@@ -15,6 +17,7 @@ public class Vertex{
 	/**
 	 * Default constructor.
 	 * @param value The value of the vertex.
+	 * @param id Is the id of the vertex.
 	 */
 	public Vertex(double value, int id){
 		incidentEdges = new ArrayList<Edge>();
@@ -47,6 +50,7 @@ public class Vertex{
 	 * @return The list of all incident edges.
 	 */
 	public ArrayList<Edge> getIncident(){
+		clear();
 		return incidentEdges;
 	}
 	/**
@@ -76,5 +80,29 @@ public class Vertex{
 	 */
 	public void setId(int id){
 		this.id = id;
+	}
+	/**
+	 * Clear all null pointers in incident Edges.
+	 */
+	private void clear(){
+		for(int i = 0; i < incidentEdges.size();){
+			if(incidentEdges.get(i) == null){
+				incidentEdges.remove(i);
+			}
+			else
+				++i;
+		}
+	}
+	public Iterator<Edge> iterator(){
+		clear();
+		return new Iterator<Edge>(){
+			int index = 0;
+			public boolean hasNext(){
+				return index < incidentEdges.size();
+			}
+			public Edge next(){
+				return incidentEdges.get(index++);
+			}
+		};
 	}
 }
