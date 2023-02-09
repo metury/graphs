@@ -3,6 +3,8 @@ package cz.cuni.mff.java.graphs;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+// TODO Properly see Incident edges.
+
 /**
  * Class for storing data about one vertex.
  * Implements Iterable through its incident edges.
