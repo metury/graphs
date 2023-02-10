@@ -12,7 +12,7 @@ import java.util.Iterator;
  * Such as building the graph, removing parts, contracting edges and exporting and importing the graph.
  * This class implements Iterable, so it can be iterated through its vertices.
  */
-public class Graph implements Iterable<Vertex>{
+public class Graph implements Iterable<Vertex>, Cloneable{
 	/** Vertices in graph. If it is removed null is present. */
 	private ArrayList<Vertex> vertices;
 	/** Edges in grap. If one is removed it is replaced by null. */
@@ -360,5 +360,25 @@ public class Graph implements Iterable<Vertex>{
 				return vertices.get(index++);
 			}
 		};
+	}
+	/**
+	 * Override cloning graphs.
+	 * @return Newly copied graph.
+	 */
+	@Override
+	public Graph clone(){
+		Graph G = new Graph(directed);
+		clear();
+		for(Vertex v : vertices){
+			G.addVertex(v.getValue(), v.getId());
+		}
+		for(Edge e : edges){
+			try{
+				G.addEdge(e.getValue(), e.getFrom(), e.getTo());
+			} catch(NonexistingVertex nv){
+				System.err.println(nv);
+			}
+		}
+		return G;
 	}
 }

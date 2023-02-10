@@ -2,6 +2,10 @@
 
 set -ueo pipefail
 
+printf " * Odstranění .class souborů -> "
+rm -f cz/cuni/mff/java/graphs/*.class | printf "(žádné nejsou)"
+echo "Hotovo"
+
 printf " * Kompilace -> "
 javac cz/cuni/mff/java/graphs/*.java
 echo "Hotovo"
