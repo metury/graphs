@@ -303,6 +303,47 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 			System.err.println("Given file " + filePath + " cannot be used.");
 		}
 	}
+	public void exportMermaid(String filePath){
+		try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath))){
+			clear();
+			out.write("graph TD;\n");
+			for(Vertex v : vertices){
+				out.write(mermaidVertex(v.getId()));
+				out.write(";\n");
+			}
+			for(Edge e : edges){
+				out.write("\t");
+				out.write(mermaidVertex(e.getFrom()));
+				if(!Double.isNaN(e.getValue())){
+					out.write(" -- \"" + e.getValue() + "\"");
+				}
+				if(directed){
+					out.write(" --> ");
+				}
+				else{
+					out.write(" --- ");
+				}
+				out.write(mermaidVertex(e.getTo()));
+				out.write(";\n");
+			}
+		} catch(IOException ioe){
+			System.err.println("Given file " + filePath + " cannot be used.");
+		}
+	}
+	private String mermaidVertex(int id){
+		Vertex v = vertices.get(id);
+		StringBuilder sb = new StringBuilder();
+		sb.append(v.getId());
+		sb.append("(\"");
+		if(!Double.isNaN(v.getValue())){
+			sb.append(v.getValue());
+		}
+		else{
+			sb.append(" ");
+		}
+		sb.append("\")");
+		return sb.toString();
+	}
 	/**
 	 * Import graph from given file in text format.
 	 * @param filePath File to be imported from.

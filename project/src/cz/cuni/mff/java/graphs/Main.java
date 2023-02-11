@@ -19,6 +19,7 @@ class Main{
 		G.exportDot("/home/tomas/git/java/project/src/export.dot");
 		System.out.println("+++++++++ Export DOT +++++++++");
 		G.importGraph("/home/tomas/git/java/project/src/export.txt");
+		G.exportMermaid("/home/tomas/git/java/project/src/export.mermaid.md");
 		System.out.println("+++++++++ Import +++++++++");
 		System.out.println("+++++++++ Tisk po exportu a importu +++++++++");
 		System.out.println(G);
