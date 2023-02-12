@@ -3,8 +3,6 @@ package cz.cuni.mff.java.graphs;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-// TODO Properly see Incident edges.
-
 /**
  * Class for storing data about one vertex.
  * Implements Iterable through its incident edges.
@@ -14,7 +12,7 @@ public class Vertex implements Iterable<Edge>{
 	private double value;
 	/** ID of this vertex. */
 	private int id;
-	/** Incident edges. If the graph is directed, only the outcoming edges are stored. */
+	/** Incident edges. */
 	private ArrayList<Edge> incidentEdges;
 	/**
 	 * Default constructor.
@@ -46,14 +44,6 @@ public class Vertex implements Iterable<Edge>{
 	 */
 	public void addEdge(Edge edge){
 		incidentEdges.add(edge);
-	}
-	/**
-	 * Get the list of incident edges to its vertex.
-	 * @return The list of all incident edges.
-	 */
-	public ArrayList<Edge> getIncident(){
-		clear();
-		return incidentEdges;
 	}
 	/**
 	 * Override the toString() method for Vertex.
@@ -95,6 +85,10 @@ public class Vertex implements Iterable<Edge>{
 				++i;
 		}
 	}
+	/**
+	 * Iterator for incident edges.
+	 * @return Newly constructed Iterator.
+	 */
 	public Iterator<Edge> iterator(){
 		clear();
 		return new Iterator<Edge>(){

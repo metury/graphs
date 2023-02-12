@@ -10,24 +10,19 @@ public class Edge{
 	private Vertex from;
 	/** The vertex at the end (or the second if the graph is undirected). */
 	private Vertex to;
-	/** If the edge is directed or not. */
-	private boolean directed;
+	private int id;
 	/**
 	 * General constructor of the edge. Also add this new edgo to its vertices.
 	 * @param value Is the value of the edge.
 	 * @param from The first vertex (beginning).
 	 * @param to The second vertex (ending).
-	 * @param directed If the edge is directed.
 	 */
-	public Edge(double value, Vertex from, Vertex to, boolean directed){
+	public Edge(double value, Vertex from, Vertex to, int id){
 		this.value = value;
 		this.from = from;
 		this.to = to;
-		this.directed = directed;
 		from.addEdge(this);
-		if(!directed){
-			to.addEdge(this);
-		}
+		to.addEdge(this);
 	}
 	/**
 	 * Get the value of the edge.
@@ -43,11 +38,11 @@ public class Edge{
 	public void setValue(double value){
 		this.value = value;
 	}
-	/**
-	 * Contract this edge.
-	 */
-	public void contract(){
-		// Delete edge and delete both vertices and make new one.
+	public int getId(){
+		return id;
+	}
+	public void setId(int id){
+		this.id = id;
 	}
 	/**
 	 * Override toString method for printing edge.
@@ -69,14 +64,20 @@ public class Edge{
 	 * Get the ID of from vertex.
 	 * @return Integer representing vertex 'from'.
 	 */
-	public int getFrom(){
-		return from.getId();
+	public Vertex getFrom(){
+		return from;
 	}
 	/**
 	 * Get the ID of to vertex.
 	 * @return Integer represenitng vertex 'to'.
 	 */
-	public int getTo(){
-		return to.getId();
+	public Vertex getTo(){
+		return to;
+	}
+	public void setTo(Vertex v){
+		to = v;
+	}
+	public void setFrom(Vertex v){
+		from = v;
 	}
 }

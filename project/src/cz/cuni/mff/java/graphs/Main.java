@@ -14,7 +14,7 @@ class Main{
 		Graph G = gen();
 		System.out.println("+++++++++ Tisk +++++++++");
 		System.out.println(G);
-		G.export("/home/tomas/git/java/project/src/export.txt");
+		G.exportGraph("/home/tomas/git/java/project/src/export.txt");
 		System.out.println("+++++++++ Export +++++++++");
 		G.exportDot("/home/tomas/git/java/project/src/export.dot");
 		System.out.println("+++++++++ Export DOT +++++++++");
@@ -37,6 +37,17 @@ class Main{
 			}
 			System.out.println();
 		}
+		try{
+		G.contractEdge(4);
+		G.exportDot("/home/tomas/git/java/project/src/exportcontract1.dot");
+		G.contractEdge(3);
+		G.exportDot("/home/tomas/git/java/project/src/exportcontract2.dot");
+		G.contractEdge(2);
+		G.exportDot("/home/tomas/git/java/project/src/exportcontract3.dot");
+		} catch(NonexistingEdge ne){
+			//
+		}
+		G.exportDot("/home/tomas/git/java/project/src/exportcontract.dot");
 	}
 	/**
 	 * Generate pseudo random graph.
@@ -44,13 +55,13 @@ class Main{
 	 */
 	public static Graph gen(){
 		Random r = new Random();
-		Graph G = new Graph(true);
-		for(int i = 0; i < 20; ++i){
-			G.addVertex(r.nextDouble());
+		Graph G = new Graph(false);
+		for(int i = 0; i < 4; ++i){
+			G.addVertex(i);
 		}
-		for(int i = 0; i < 30; ++i){
+		for(int i = 0; i < 5; ++i){
 			try{
-				G.addEdge(r.nextDouble(), r.nextInt(20), r.nextInt(20));
+				G.addEdge(i, r.nextInt(4), r.nextInt(4));
 			} catch(NonexistingVertex nv){
 				System.err.println(nv);
 			}
