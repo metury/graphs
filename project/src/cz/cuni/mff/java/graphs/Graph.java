@@ -135,7 +135,12 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 			throw new NonexistingVertex(id);
 		}
 		vertices.remove(id);
+		reIndex();
 	}
+	/**
+	 * Remove vertex by its reference if it is present in the graph.
+	 * @param v Given vertex.
+	 */
 	public void removeVertex(Vertex v){
 		try{
 			if(v == vertices.get(v.getId()))
@@ -157,6 +162,7 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 		e.getFrom().removeEdge(e);
 		e.getTo().removeEdge(e);
 		edges.remove(id);
+		reIndex();
 	}
 	/**
 	 * Remove edge if it is present.
@@ -187,29 +193,34 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	/**
 	 * Contract edge in graph.
 	 * @param id Id of the edge.
+	 * @throws NonexistingEdge If the given edge does not exist.
 	 */
 	public void contractEdge(int id) throws NonexistingEdge{
-		if(id >= edges.size() || edges.get(id) == null){
+		if(id >= edges.size()){
 			throw new NonexistingEdge(id);
 		}
 		Edge e = edges.get(id);
 		Vertex from = e.getFrom();
 		Vertex to = e.getTo();
-		Vertex v = addVertex(from.getValue() + to.getValue());
+		Vertex v = addVertex();
 		for(Edge edge : from){
 			if(from == edge.getFrom()){
 				edge.setFrom(v);
+				v.addEdge(edge);
 			}
 			if(from == edge.getTo()){
 				edge.setTo(v);
+				v.addEdge(edge);
 			}
 		}
 		for(Edge edge : to){
 			if(to == edge.getFrom()){
 				edge.setFrom(v);
+				v.addEdge(edge);
 			}
 			if(to == edge.getTo()){
 				edge.setTo(v);
+				v.addEdge(edge);
 			}
 		}
 		removeVertex(from);
@@ -244,6 +255,19 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 			sb.append(e);
 		}
 		return sb.toString();
+	}
+	/**
+	 * Rewrite all indeces in the graph.
+	 */
+	private void reIndex(){
+		int index = 0;
+		for(Vertex v : vertices){
+			v.setId(index++);
+		}
+		index = 0;
+		for(Edge e : edges){
+			e.setId(index++);
+		}
 	}
 	/**
 	 * Export the graph to file.

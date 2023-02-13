@@ -1,7 +1,5 @@
 *.class
 project/src/docs/
 *.dot
-export.txt
 *.gv
 *.svg
-*.mermaid.md
