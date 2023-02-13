@@ -2,28 +2,116 @@ package cz.cuni.mff.java.graphs;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.io.*;
 
 public class GraphAlgorithms{
-	public static void minCut(Graph G){
-		Graph H = G.clone();
+	public static int minCut(Graph G){
+		if(!isConnected(G)){
+			return 0;
+		}
 		Random r = new Random();
-		while(H.vertexSize() > 2){
-			H.removeLoops();
+		int min = G.edgeSize();
+		//indexToValues(G);
+		Graph Gmin = G.clone();
+		for(int i = 0; i < G.vertexSize(); ++i){
+			int minX = minCutStep(G,2,r);
+			min = min > minX ? minX : min;
+		}
+		return min;
+	}
+	private static void indexToValues(Graph G){
+		for(Vertex v : G){
+			v.setValue(v.getId());
+		}
+		for(int i = 0; i < G.edgeSize(); ++i){
+			Edge e;
+			try{
+				e = G.getEdge(i);
+			} catch(NonexistingEdge ne){
+				System.err.println(ne);
+				return;
+			}
+			e.setValue(e.getId());
+		}
+	}
+	private static int minCutStep(Graph G, int nrVertices, Random r){
+		Graph H = G.clone();
+		H.removeLoops();
+		while(H.vertexSize() > nrVertices){
 			int id = r.nextInt(H.edgeSize());
 			try{
 				H.contractEdge(id);
 			} catch(NonexistingEdge ne){
 				System.err.println(ne);
 			}
-			System.out.println("Edges: " + H.edgeSize() + " Vertices: " + H.vertexSize());
+			H.removeLoops();
 		}
-		H.exportDot("/home/tomas/git/java/project/src/mincut.dot");
+		return H.edgeSize();
 	}
 	public static void minCutVisualize(Graph G, String filePath){
-		
-	}
-	public static Graph shortestPath(Graph G){
-		return null;
+		Random r = new Random();
+		Graph H = G.clone();
+		try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath))){
+			out.write("# Problém **MinCut** *(minimální řez)* pomocí pravděpodobnostního algoritmu\n\n");
+			out.write("Algoritmus jen v každé iteraci náhodně kontrahuje jednu hranu, dokud nemá právě jen 2 vrcholy, potom počet hran je roven velikosti řezu.\n\n");
+			out.write("V našem případě si ukážeme jen jednu iteraci. Normální se algoritmus vícekrát opakuje pro větší pravděpodobnost správného výsledku.\n\n");
+			out.write("## Graf na vstupu:\n\n");
+			out.write("```mermaid\n");
+		} catch(IOException ioe){
+			System.err.println(ioe);
+		}
+		G.exportMermaid(filePath, true);
+		try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath, true))){
+			out.write("```\n\n");
+			if(H.isDirected()){
+				H.switchDirected();
+				out.write("Protože problém minimálního řezu řešíme nad neorientovaným grafem, tak všechny hrany změníme na neorientované.\n\n");
+			}
+			out.write("Nyní už budeme postupně iterovat. S tím, že v každém momentu očíslujeme vrcholy a hrany pro přehlednost, a taky se zbavíme smyček.\n\n");
+		} catch(IOException ioe){
+			System.err.println(ioe);
+		}
+		int stepCount = 1;
+		while(H.vertexSize() > 2){
+			int id = r.nextInt(H.edgeSize());
+			indexToValues(H);
+			try{
+				try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath, true))){
+					out.write("## Krok ");
+					out.write(Integer.toString(stepCount++));
+					out.write("\n\nV tomhle kroku kontrahujeme hranu `");
+					out.write(G.getEdge(id).toString());
+					out.write("`.\n\n```mermaid\n");
+				} catch(IOException ioe){
+					System.err.println(ioe);
+				}
+				H.exportMermaid(filePath,true,id);
+				try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath, true))){
+					out.write("```\n\nA získáváme:\n\n```mermaid\n");
+				} catch(IOException ioe){
+					System.err.println(ioe);
+				}
+				H.contractEdge(id);
+				H.exportMermaid(filePath,true);
+				try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath, true))){
+					out.write("```\n\n");
+				} catch(IOException ioe){
+					System.err.println(ioe);
+				}
+			} catch(NonexistingEdge ne){
+				System.err.println(ne);
+			}
+			H.removeLoops();
+		}
+		try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath, true))){
+			out.write("Tímto konkrétním postupem jsem došli k výsledku, že minimální řez má velikost nejvýše: **");
+			out.write(Integer.toString(H.edgeSize()));
+			out.write("**\n\n*Pokud bychom tento algoritmus zopakovali aspoň tolikrát, kolik je vrcholů, tak získáme výsledek: **");
+			out.write(Integer.toString(minCut(G)));
+			out.write("***");
+		} catch(IOException ioe){
+			System.err.println(ioe);
+		}
 	}
 	/**
 	 * To find out if the given graph is connected.

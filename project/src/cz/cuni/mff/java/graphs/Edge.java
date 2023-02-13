@@ -27,6 +27,7 @@ public class Edge{
 		if(from != to){
 			to.addEdge(this);
 		}
+		this.id = id;
 	}
 	/**
 	 * Get the value of the edge.

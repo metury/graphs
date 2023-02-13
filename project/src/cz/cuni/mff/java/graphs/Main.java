@@ -66,7 +66,18 @@ class Main{
 		System.out.print("Pokud je orientovaný, je ostře spojený? ");
 		System.out.println(GraphAlgorithms.isStronglyConnected(G));
 		System.out.print("Přidáme separátní vrchol. Je graf spojený? ");
-		G.addVertex();
+		Vertex v = G.addVertex();
 		System.out.println(GraphAlgorithms.isConnected(G));
+		
+		System.out.println();
+		
+		System.out.print("Jaký je minCut grafu? ");
+		System.out.println(GraphAlgorithms.minCut(G));
+		
+		System.out.print("Je to nula, protože není spojený. A co když odstraníme daný vrchol? ");
+		G.removeVertex(v);
+		System.out.println(GraphAlgorithms.minCut(G));
+		
+		GraphAlgorithms.minCutVisualize(G, "./testing/minCut.md");
 	}
 }

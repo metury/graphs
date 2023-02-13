@@ -234,9 +234,9 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	 * Remove all edge loops.
 	 */
 	public void removeLoops(){
-		for(Edge e : edges){
-			if(e.isLoop()){
-				removeEdge(e);
+		for(int i = 0; i < edges.size(); ++i){
+			if(edges.get(i).isLoop()){
+				edges.remove(i);
 			}
 		}
 	}
@@ -360,18 +360,39 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 		sb.append(";\n");
 		return sb.toString();
 	}
+	public void exportMermaid(String filePath){
+		exportMermaid(filePath, false);
+	}
 	/**
 	 * Export graph to mermaid syntax. https://mermaid.js.org/
 	 * @param filePath Which file should be used for export.
 	 */
-	public void exportMermaid(String filePath){
-		try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath))){
+	public void exportMermaid(String filePath, boolean append){
+		try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath, append))){
 			out.write("graph TD;\n");
 			for(Vertex v : vertices){
 				out.write(mermaidVertex(v));
 			}
 			for(Edge e : edges){
 				out.write(mermaidEdge(e));
+			}
+		} catch(IOException ioe){
+			System.err.println(ioe);
+		}
+	}
+	public void exportMermaid(String filePath, boolean append, int idSpecial){
+		try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath, append))){
+			out.write("graph TD;\n");
+			for(Vertex v : vertices){
+				out.write(mermaidVertex(v));
+			}
+			for(Edge e : edges){
+				if(idSpecial == e.getId()){
+					out.write(mermaidEdgeSpecial(e));
+				}
+				else{
+					out.write(mermaidEdge(e));
+				}
 			}
 		} catch(IOException ioe){
 			System.err.println(ioe);
@@ -420,6 +441,25 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 		sb.append(";\n");
 		return sb.toString();
 	}
+	private String mermaidEdgeSpecial(Edge e){
+		StringBuilder sb = new StringBuilder();
+		sb.append("\t");
+		sb.append(e.getFrom().getId());
+		if(!Double.isNaN(e.getValue())){
+			sb.append(" -. \"");
+			sb.append(e.getValue());
+			sb.append("\"");
+		}
+		if(directed){
+			sb.append(" -.-> ");
+		}
+		else{
+			sb.append(" -.- ");
+		}
+		sb.append(e.getTo().getId());
+		sb.append(";\n");
+		return sb.toString();
+	}
 	/**
 	 * Import graph from given file in text format.
 	 * @param filePath File to be imported from.
@@ -444,7 +484,7 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 					sb.append(ch);		
 				}
 				else if(ch == ')'){
-					sb.delete(0,1);
+					sb.delete(0,1); // remove '('
 					String[] components = sb.toString().split(";");
 					if(components.length == 1){
 						addVertex(Double.parseDouble(components[0]));
@@ -455,7 +495,7 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 					sb = new StringBuilder();
 				}
 				else if(ch == ']'){
-					sb.delete(0,1);
+					sb.delete(0,1); // remove '['
 					String[] components = sb.toString().split(";");
 					if(components.length == 2){
 						addEdge(Integer.parseInt(components[0]), Integer.parseInt(components[1]));
@@ -492,6 +532,10 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 				return vertices.get(index++);
 			}
 		};
+	}
+	public boolean switchDirected(){
+		directed = !directed;
+		return directed;
 	}
 	/**
 	 * Override cloning graphs.
