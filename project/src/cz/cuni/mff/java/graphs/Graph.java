@@ -27,12 +27,12 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	}
 	/**
 	 * Constructor using import from text file.
-	 * @param fileName Path to the file containing graph.
+	 * @param filePath Path to the file containing graph.
 	 */
-	public Graph(String fileName){
+	public Graph(String filePath){
 		vertices = new ArrayList<Vertex>();
 		edges = new ArrayList<Edge>();
-		importGraph(fileName);
+		importGraph(filePath);
 	}
 	public boolean isDirected(){
 		return directed;
@@ -111,7 +111,7 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex does not exist.
 	 */
 	public Vertex getVertex(int id) throws NonexistingVertex{
-		if(id >= vertices.size() || vertices.get(id) == null){
+		if(id >= vertices.size()){
 			throw new NonexistingVertex(id);
 		}
 		return vertices.get(id);
@@ -123,25 +123,28 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	 * @throws cz.cuni.mff.java.graphs.NonexistingEdge If the edge does not exist.
 	 */
 	public Edge getEdge(int id) throws NonexistingEdge{
-		if(id >= edges.size() || edges.get(id) == null){
+		if(id >= edges.size()){
 			throw new NonexistingEdge(id);
 		}
 		return edges.get(id);
 	}
 	/**
-	 * Remove vertex.
+	 * Remove vertex. May change ids.
 	 * @param id Id of the vertex to be removed.
 	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex does not exist.
+	 * @return Reference to the removed Vertex.
 	 */
-	public void removeVertex(int id) throws NonexistingVertex{
+	public Vertex removeVertex(int id) throws NonexistingVertex{
 		if(id >= vertices.size()){
 			throw new NonexistingVertex(id);
 		}
+		Vertex v = vertices.get(id);
 		vertices.remove(id);
 		reIndex();
+		return v;
 	}
 	/**
-	 * Remove vertex by its reference if it is present in the graph.
+	 * Remove vertex by its reference if it is present in the graph. May change ids.
 	 * @param v Given vertex.
 	 */
 	public void removeVertex(Vertex v){
@@ -153,9 +156,10 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 		}
 	}
 	/**
-	 * Remove edge.
+	 * Remove edge. May change ids.
 	 * @param id The id of the edge.
 	 * @throws cz.cuni.mff.java.graphs.NonexistingEdge If the edge does not exist.
+	 * @return Reference to the removed Edge.
 	 */
 	public Edge removeEdge(int id) throws NonexistingEdge{
 		if(id >= edges.size()){
@@ -169,17 +173,16 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 		return e;
 	}
 	/**
-	 * Remove edge if it is present.
+	 * Remove edge if it is present. May chaneg ids.
 	 * @param e Given edge.
 	 */
-	public Edge removeEdge(Edge e){
+	public void removeEdge(Edge e){
 		try{
 			if(e == edges.get(e.getId()))
-				return removeEdge(e.getId());
+				removeEdge(e.getId());
 		} catch(NonexistingEdge ne){
 			System.err.println(ne);
 		}
-		return null;
 	}
 	/**
 	 * Get the number of edges.
@@ -196,7 +199,7 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 		return vertices.size();
 	}
 	/**
-	 * Contract edge in graph.
+	 * Contract edge in graph. May change ids.
 	 * @param id Id of the edge.
 	 * @throws NonexistingEdge If the given edge does not exist.
 	 */
@@ -362,12 +365,17 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 		sb.append(";\n");
 		return sb.toString();
 	}
+	/**
+	 * Export graph to mermaid syntax. https://mermaid.js.org/
+	 * @param filePath Which file should be used for export.
+	 */
 	public void exportMermaid(String filePath){
 		exportMermaid(filePath, false);
 	}
 	/**
 	 * Export graph to mermaid syntax. https://mermaid.js.org/
 	 * @param filePath Which file should be used for export.
+	 * @param append If the text should be appended to the file or overwrite the file.
 	 */
 	public void exportMermaid(String filePath, boolean append){
 		try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath, append))){
@@ -382,15 +390,21 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 			System.err.println(ioe);
 		}
 	}
-	public void exportMermaid(String filePath, boolean append, int idSpecial){
+	/**
+	 * Export graph to mermaid syntax. With one edge dotted. https://mermaid.js.org/
+	 * @param filePath Which file should be used for export.
+	 * @param append If the text should be appended to the file or overwrite the file.
+	 * @param idDotted Which edge should be dotted.
+	 */
+	public void exportMermaid(String filePath, boolean append, int idDotted){
 		try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath, append))){
 			out.write("graph TD;\n");
 			for(Vertex v : vertices){
 				out.write(mermaidVertex(v));
 			}
 			for(Edge e : edges){
-				if(idSpecial == e.getId()){
-					out.write(mermaidEdgeSpecial(e));
+				if(idDotted == e.getId()){
+					out.write(mermaidEdgeDotted(e));
 				}
 				else{
 					out.write(mermaidEdge(e));
@@ -443,7 +457,12 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 		sb.append(";\n");
 		return sb.toString();
 	}
-	private String mermaidEdgeSpecial(Edge e){
+	/**
+	 * Make String representing dotted edge in mermaid.
+	 * @param e Given edge.
+	 * @return Constructed String.
+	 */
+	private String mermaidEdgeDotted(Edge e){
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t");
 		sb.append(e.getFrom().getId());
