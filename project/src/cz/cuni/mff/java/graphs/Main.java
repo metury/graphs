@@ -71,12 +71,16 @@ class Main{
 		
 		System.out.println();
 		
-		System.out.print("Jaký je minCut grafu? ");
-		System.out.println(GraphAlgorithms.minCut(G));
+		System.out.print("Jaký je minimální řez grafu? ");
+		System.out.println(GraphAlgorithms.minCutProb(G));
 		
 		System.out.print("Je to nula, protože není spojený. A co když odstraníme daný vrchol? ");
 		G.removeVertex(v);
-		System.out.println(GraphAlgorithms.minCut(G));
+		System.out.println(GraphAlgorithms.minCutProb(G));
+		System.out.print("Také lze minimální řez najít pomocí bruteforce: ");
+		System.out.println(GraphAlgorithms.minCutBruteForce(G));
+		System.out.print("Jako poslední je nejideálnější Karger's-Stein algoritmus: ");
+		System.out.println(GraphAlgorithms.fastMinCut(G));
 		
 		GraphAlgorithms.minCutVisualize(G, "./testing/minCut.md");
 	}

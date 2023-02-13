@@ -5,16 +5,53 @@ import java.util.Random;
 import java.io.*;
 
 public class GraphAlgorithms{
-	public static int minCut(Graph G){
+	public static int fastMinCut(Graph G){
+		Random r = new Random();
+		Graph H = G.clone();
+		return minC(H, r);
+	}
+	public static int minC(Graph G, Random r){
+		if(G.vertexSize() < 7){
+			return minCutBruteForce(G);
+		}
+		else{
+			long t = Math.round(Math.ceil(G.vertexSize()/Math.sqrt(2) + 1));
+			Graph H1 = minCutStep(G,t,r);
+			Graph H2 = minCutStep(G,t,r);
+			int v1 = minC(H1,r);
+			int v2 = minC(H2,r);
+			return v1 > v2 ? v2 : v1;
+		}
+	}
+	public static int minCutBruteForce(Graph G){
+		Graph H = G.clone();
+		return minCutBruteForceRecursion(H,0,G.edgeSize());
+	}
+	private static int minCutBruteForceRecursion(Graph G, int removed, int min){
+		if(!isConnected(G)){
+			return removed;
+		}
+		for(int i = 0; i < G.edgeSize(); ++i){
+			try{
+				Edge e = G.removeEdge(i);
+				int result = minCutBruteForceRecursion(G, removed+1, min);
+				min = min > result ? result : min;
+				G.addEdge(e.getFrom().getId(), e.getTo().getId());
+			} catch(NonexistingEdge ne){
+				System.err.println(ne);
+			}
+		}
+		return min;
+	}
+	public static int minCutProb(Graph G){
 		if(!isConnected(G)){
 			return 0;
 		}
 		Random r = new Random();
 		int min = G.edgeSize();
-		//indexToValues(G);
-		Graph Gmin = G.clone();
 		for(int i = 0; i < G.vertexSize(); ++i){
-			int minX = minCutStep(G,2,r);
+			Graph H = minCutStep(G,2,r);
+			int minX = H.edgeSize();
 			min = min > minX ? minX : min;
 		}
 		return min;
@@ -34,7 +71,7 @@ public class GraphAlgorithms{
 			e.setValue(e.getId());
 		}
 	}
-	private static int minCutStep(Graph G, int nrVertices, Random r){
+	private static Graph minCutStep(Graph G, long nrVertices, Random r){
 		Graph H = G.clone();
 		H.removeLoops();
 		while(H.vertexSize() > nrVertices){
@@ -46,7 +83,7 @@ public class GraphAlgorithms{
 			}
 			H.removeLoops();
 		}
-		return H.edgeSize();
+		return H;
 	}
 	public static void minCutVisualize(Graph G, String filePath){
 		Random r = new Random();
@@ -107,7 +144,7 @@ public class GraphAlgorithms{
 			out.write("Tímto konkrétním postupem jsem došli k výsledku, že minimální řez má velikost nejvýše: **");
 			out.write(Integer.toString(H.edgeSize()));
 			out.write("**\n\n*Pokud bychom tento algoritmus zopakovali aspoň tolikrát, kolik je vrcholů, tak získáme výsledek: **");
-			out.write(Integer.toString(minCut(G)));
+			out.write(Integer.toString(minCutProb(G)));
 			out.write("***");
 		} catch(IOException ioe){
 			System.err.println(ioe);

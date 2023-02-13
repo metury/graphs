@@ -157,7 +157,7 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	 * @param id The id of the edge.
 	 * @throws cz.cuni.mff.java.graphs.NonexistingEdge If the edge does not exist.
 	 */
-	public void removeEdge(int id) throws NonexistingEdge{
+	public Edge removeEdge(int id) throws NonexistingEdge{
 		if(id >= edges.size()){
 			throw new NonexistingEdge(id);
 		}
@@ -166,18 +166,20 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 		e.getTo().removeEdge(e);
 		edges.remove(id);
 		reIndex();
+		return e;
 	}
 	/**
 	 * Remove edge if it is present.
 	 * @param e Given edge.
 	 */
-	public void removeEdge(Edge e){
+	public Edge removeEdge(Edge e){
 		try{
 			if(e == edges.get(e.getId()))
-				removeEdge(e.getId());
+				return removeEdge(e.getId());
 		} catch(NonexistingEdge ne){
 			System.err.println(ne);
 		}
+		return null;
 	}
 	/**
 	 * Get the number of edges.
