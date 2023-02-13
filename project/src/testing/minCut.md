@@ -27,7 +27,7 @@ Nyní už budeme postupně iterovat. S tím, že v každém momentu očíslujeme
 
 ## Krok 1
 
-V tomhle kroku kontrahujeme hranu `[0;NaN;1]`.
+V tomhle kroku kontrahujeme hranu `[3;NaN;2]`.
 
 ```mermaid
 graph TD;
@@ -36,12 +36,44 @@ graph TD;
 2("2.0");
 3("3.0");
 	3 -- "0.0" --- 0;
-	0 -. "1.0" -.- 1;
+	0 -- "1.0" --- 1;
 	1 -- "2.0" --- 2;
 	0 -- "3.0" --- 2;
 	0 -- "4.0" --- 3;
 	1 -- "5.0" --- 3;
-	3 -- "6.0" --- 2;
+	3 -. "6.0" -.- 2;
+```
+
+A získáváme:
+
+```mermaid
+graph TD;
+0("0.0");
+1("1.0");
+2(" ");
+	2 -- "0.0" --- 0;
+	0 -- "1.0" --- 1;
+	1 -- "2.0" --- 2;
+	0 -- "3.0" --- 2;
+	0 -- "4.0" --- 2;
+	1 -- "5.0" --- 2;
+```
+
+## Krok 2
+
+V tomhle kroku kontrahujeme hranu `[0;NaN;1]`.
+
+```mermaid
+graph TD;
+0("0.0");
+1("1.0");
+2("2.0");
+	2 -- "0.0" --- 0;
+	0 -. "1.0" -.- 1;
+	1 -- "2.0" --- 2;
+	0 -- "3.0" --- 2;
+	0 -- "4.0" --- 2;
+	1 -- "5.0" --- 2;
 ```
 
 A získáváme:
@@ -49,47 +81,15 @@ A získáváme:
 ```mermaid
 graph TD;
 0("2.0");
-1("3.0");
-2(" ");
-	1 -- "0.0" --- 2;
-	2 -- "2.0" --- 0;
-	2 -- "3.0" --- 0;
-	2 -- "4.0" --- 1;
-	2 -- "5.0" --- 1;
-	1 -- "6.0" --- 0;
-```
-
-## Krok 2
-
-V tomhle kroku kontrahujeme hranu `[0;NaN;2]`.
-
-```mermaid
-graph TD;
-0("0.0");
-1("1.0");
-2("2.0");
-	1 -- "0.0" --- 2;
-	2 -- "1.0" --- 0;
-	2 -- "2.0" --- 0;
-	2 -. "3.0" -.- 1;
-	2 -- "4.0" --- 1;
-	1 -- "5.0" --- 0;
-```
-
-A získáváme:
-
-```mermaid
-graph TD;
-0("0.0");
 1(" ");
-	1 -- "0.0" --- 1;
-	1 -- "1.0" --- 0;
+	0 -- "0.0" --- 1;
 	1 -- "2.0" --- 0;
-	1 -- "4.0" --- 1;
+	1 -- "3.0" --- 0;
+	1 -- "4.0" --- 0;
 	1 -- "5.0" --- 0;
 ```
 
-Tímto konkrétním postupem jsem došli k výsledku, že minimální řez má velikost nejvýše: **3**
+Tímto konkrétním postupem jsem došli k výsledku, že minimální řez má velikost nejvýše: **5**
 
 *Pokud bychom tento algoritmus zopakovali aspoň tolikrát, kolik je vrcholů, tak získáme výsledek: **3***
 
@@ -97,4 +97,4 @@ Tímto konkrétním postupem jsem došli k výsledku, že minimální řez má v
 
 Protože graf není nijak velký, tak lze použít hledání pomocí hrubé síly. To pak dává výsledek: **3**
 
-Díky tomu, že jsme mohli použít hledání hrubou silou, tak Kargber Steinův algoritmus nám vrátí stejný výsledek, protože v tak malém grafu hend používá hrubou sílu.
+Díky tomu, že jsme mohli použít hledání hrubou silou, tak Karger Steinův algoritmus nám vrátí stejný výsledek, protože v tak malém grafu hend používá hrubou sílu.

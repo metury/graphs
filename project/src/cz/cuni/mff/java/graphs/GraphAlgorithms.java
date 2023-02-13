@@ -222,7 +222,7 @@ public class GraphAlgorithms{
 			if(G.vertexSize() < 7){
 				out.write("Protože graf není nijak velký, tak lze použít hledání pomocí hrubé síly. To pak dává výsledek: **");
 				out.write(Integer.toString(minCutBruteForce(G)));
-				out.write("**\n\nDíky tomu, že jsme mohli použít hledání hrubou silou, tak Kargber Steinův algoritmus nám vrátí stejný výsledek, protože v tak malém grafu hend používá hrubou sílu.\n");
+				out.write("**\n\nDíky tomu, že jsme mohli použít hledání hrubou silou, tak Karger Steinův algoritmus nám vrátí stejný výsledek, protože v tak malém grafu hend používá hrubou sílu.\n");
 			}
 			else{
 				out.write("Protože graf je celkem velký, tak není doporučený použít hledání hrubou sílou, ale za to můžeme na druhou stranu použít celkem dost efektivní algoritmus Karger-Steinův, který používá předem ukázanou kontrakci hrany. Přesně je to rekurzivní používání daného postupu na nižším počtu vrcholů, dokud se nedostane na nějakou hodnotu, po které se už použije hrubá síla. Konkrétní výsledek potom je: **");
