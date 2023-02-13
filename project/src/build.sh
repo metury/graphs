@@ -3,7 +3,10 @@
 set -ueo pipefail
 
 printf " * Odstranění .class souborů -> "
-rm -f cz/cuni/mff/java/graphs/*.class | printf "(žádné nejsou)"
+rm -f cz/cuni/mff/java/graphs/*.class
+rm -f *.dot
+rm -f *.svg
+#rm -f export*
 echo "Hotovo"
 
 printf " * Kompilace -> "

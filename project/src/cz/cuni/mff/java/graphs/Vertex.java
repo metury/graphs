@@ -74,23 +74,22 @@ public class Vertex implements Iterable<Edge>{
 		this.id = id;
 	}
 	/**
-	 * Clear all null pointers in incident Edges.
+	 * Remove edge from incident edges if is present.
+	 * @param e Edge that is to be removed.
 	 */
-	private void clear(){
-		for(int i = 0; i < incidentEdges.size();){
-			if(incidentEdges.get(i) == null){
+	public void removeEdge(Edge e){
+		for(int i = 0; i < incidentEdges.size(); ++i){
+			if(e == incidentEdges.get(i)){
 				incidentEdges.remove(i);
+				return;
 			}
-			else
-				++i;
 		}
 	}
 	/**
-	 * Iterator for incident edges.
+	 * Iterator for incident edges. Also clear out all null pointers beforehand.
 	 * @return Newly constructed Iterator.
 	 */
 	public Iterator<Edge> iterator(){
-		clear();
 		return new Iterator<Edge>(){
 			int index = 0;
 			public boolean hasNext(){

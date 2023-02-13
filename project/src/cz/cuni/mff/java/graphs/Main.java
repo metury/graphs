@@ -11,14 +11,15 @@ class Main{
 	 * @param args Are argumetns.
 	 */
 	public static void main(String[] args){
-		Graph G = gen();
-		System.out.println("+++++++++ Tisk +++++++++");
-		System.out.println(G);
-		G.exportGraph("/home/tomas/git/java/project/src/export.txt");
-		System.out.println("+++++++++ Export +++++++++");
-		G.exportDot("/home/tomas/git/java/project/src/export.dot");
-		System.out.println("+++++++++ Export DOT +++++++++");
-		G.importGraph("/home/tomas/git/java/project/src/export.txt");
+		//Graph G = gen();
+		//System.out.println("+++++++++ Tisk +++++++++");
+		//System.out.println(G);
+		//G.exportGraph("/home/tomas/git/java/project/src/export.txt");
+		//System.out.println("+++++++++ Export +++++++++");
+		//G.exportDot("/home/tomas/git/java/project/src/export.dot");
+		//System.out.println("+++++++++ Export DOT +++++++++");
+		Graph G = new Graph("/home/tomas/git/java/project/src/export.txt");
+		//G.importGraph("/home/tomas/git/java/project/src/export.txt");
 		G.exportMermaid("/home/tomas/git/java/project/src/export.mermaid.md");
 		System.out.println("+++++++++ Import +++++++++");
 		System.out.println("+++++++++ Tisk po exportu a importu +++++++++");
@@ -37,17 +38,7 @@ class Main{
 			}
 			System.out.println();
 		}
-		try{
-		G.contractEdge(4);
-		G.exportDot("/home/tomas/git/java/project/src/exportcontract1.dot");
-		G.contractEdge(3);
-		G.exportDot("/home/tomas/git/java/project/src/exportcontract2.dot");
-		G.contractEdge(2);
-		G.exportDot("/home/tomas/git/java/project/src/exportcontract3.dot");
-		} catch(NonexistingEdge ne){
-			//
-		}
-		G.exportDot("/home/tomas/git/java/project/src/exportcontract.dot");
+		System.out.println(GraphAlgorithms.isConnected(G));
 	}
 	/**
 	 * Generate pseudo random graph.
@@ -60,11 +51,7 @@ class Main{
 			G.addVertex(i);
 		}
 		for(int i = 0; i < 5; ++i){
-			try{
-				G.addEdge(i, r.nextInt(4), r.nextInt(4));
-			} catch(NonexistingVertex nv){
-				System.err.println(nv);
-			}
+			G.addEdge(i, r.nextInt(4), r.nextInt(4));
 		}
 		return G;
 	}

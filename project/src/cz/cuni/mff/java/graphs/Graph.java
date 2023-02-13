@@ -10,18 +10,12 @@ import java.util.Iterator;
  * This class implements Iterable, so it can be iterated through its vertices.
  */
 public class Graph implements Iterable<Vertex>, Cloneable{
-	/** Vertices in graph. If it is removed null is present. */
+	/** Vertices in the graph. */
 	private ArrayList<Vertex> vertices;
-	/** Edges in grap. If one is removed it is replaced by null. */
+	/** Edges in the graph. */
 	private ArrayList<Edge> edges;
 	/** If the graph is directed or not. */
 	private boolean directed;
-	/** Number of edges. */
-	private int edgeCount;
-	/** Number of vertices. */
-	private int vertexCount;
-	/** Threshold on how many null ponters can be in arrays, when removing edge or vertex. */
-	private final double SPACE_THRESHOLD = 0.7;
 	/**
 	 * Default constructor.
 	 * @param isDirected If the graph is directed or not.
@@ -43,13 +37,15 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	/**
 	 * Add vertex to the graph.
 	 * @param value Is the value of the vertex.
-	 * @param id Is the id of the new vertex. Has to be one bigger than the number of vertices.
+	 * @param id Is the id of the new vertex. If it is not sequent add it in between or make all pre-vertices.
 	 * @return Newly constructed Vector.
 	 */
 	public Vertex addVertex(double value, int id){
+		while(id > vertices.size()){
+			vertices.add(new Vertex(Double.NaN, vertices.size()));
+		}
 		Vertex v = new Vertex(value, id);
 		vertices.add(id, v);
-		vertexCount++;
 		return v;
 	}
 	/**
@@ -74,18 +70,16 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	 * @param to Is the id of the vertex where the edge is ending.
 	 * @param id Is the id of the edge. Has to be one more than the number of vertices.
 	 * @return Newly constructed edge.
-	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex does not exist.
 	 */
-	public Edge addEdge(double value, int from, int to, int id) throws NonexistingVertex{
-		if(to >= vertices.size() || vertices.get(to) == null ){
-			throw new NonexistingVertex(to);
+	public Edge addEdge(double value, int from, int to, int id){
+		while(to >= vertices.size() ){
+			addVertex();
 		}
-		if(from >= vertices.size() || vertices.get(from) == null){
-			throw new NonexistingVertex(from);
+		while(from >= vertices.size()){
+			addVertex();
 		}
 		Edge e = new Edge(value, vertices.get(from), vertices.get(to), id);
 		edges.add(id, e);
-		edgeCount++;
 		return e;
 	}
 	/**
@@ -94,9 +88,8 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	 * @param from Is the id of the vertex where the edge is starting.
 	 * @param to Is the id of the vertex where the edge is ending.
 	 * @return Newly constructed edge.
-	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex does not exist.
 	 */
-	public Edge addEdge(double value, int from, int to) throws NonexistingVertex{
+	public Edge addEdge(double value, int from, int to){
 		return addEdge(value, from, to, edges.size());
 	}
 	/**
@@ -104,9 +97,8 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	 * @param from Is the id of the vertex where the edge is starting.
 	 * @param to Is the id of the vertex where the edge is ending.
 	 * @return Newly constructed edge.
-	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex does not exist.
 	 */
-	public Edge addEdge(int from, int to) throws NonexistingVertex{
+	public Edge addEdge(int from, int to){
 		return addEdge(Double.NaN, from, to, edges.size());
 	}
 	/**
@@ -139,22 +131,17 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	 * @throws cz.cuni.mff.java.graphs.NonexistingVertex If the vertex does not exist.
 	 */
 	public void removeVertex(int id) throws NonexistingVertex{
-		if(id >= vertices.size() || vertices.get(id) == null){
+		if(id >= vertices.size()){
 			throw new NonexistingVertex(id);
 		}
-		vertexCount--;
-		vertices.set(id, null);
-		double space =  (double) vertexCount / vertices.size();
-		if(space < SPACE_THRESHOLD){
-			clear();
-		}
+		vertices.remove(id);
 	}
 	public void removeVertex(Vertex v){
 		try{
 			if(v == vertices.get(v.getId()))
 				removeVertex(v.getId());
 		} catch(NonexistingVertex nv){
-			System.err.println("Given vertex with id " + v.getId() + " does not exist.");
+			System.err.println(nv);
 		}
 	}
 	/**
@@ -163,22 +150,24 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	 * @throws cz.cuni.mff.java.graphs.NonexistingEdge If the edge does not exist.
 	 */
 	public void removeEdge(int id) throws NonexistingEdge{
-		if(id >= edges.size() || edges.get(id) == null){
+		if(id >= edges.size()){
 			throw new NonexistingEdge(id);
 		}
-		edgeCount--;
-		edges.set(id, null);
-		double space =  (double) edgeCount / edges.size();
-		if(space < SPACE_THRESHOLD){
-			clear();
-		}
+		Edge e = edges.get(id);
+		e.getFrom().removeEdge(e);
+		e.getTo().removeEdge(e);
+		edges.remove(id);
 	}
+	/**
+	 * Remove edge if it is present.
+	 * @param e Given edge.
+	 */
 	public void removeEdge(Edge e){
 		try{
 			if(e == edges.get(e.getId()))
 				removeEdge(e.getId());
 		} catch(NonexistingEdge ne){
-			System.err.println("Given edge with id " + e.getId() + " does not exist.");
+			System.err.println(ne);
 		}
 	}
 	/**
@@ -186,44 +175,19 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	 * @return The number of edges.
 	 */
 	public int edgeSize(){
-		return edgeCount;
+		return edges.size();
 	}
 	/**
 	 * Get the number of vertices.
 	 * @return The number of vertices.
 	 */
 	public int vertexSize(){
-		return vertexCount;
-	}
-	/**
-	 * Clear all null pointers in both arrays.
-	 * May change some ids of vertices and edges!
-	 */
-	private void clear(){
-		for(int i = 0; i < vertices.size();){
-		Vertex v = vertices.get(i);
-			if(v == null){
-				vertices.remove(i);
-			}
-			else{
-				v.setId(i++);
-			}
-		}
-		for(int i = 0; i < edges.size();){
-			Edge e = edges.get(i);
-			if(e == null){
-				edges.remove(i);
-			}
-			else{
-				e.setId(i++);
-			}
-		}
+		return vertices.size();
 	}
 	/**
 	 * Contract edge in graph.
 	 * @param id Id of the edge.
 	 */
-	 // TODO Kontrakce funguje špatně.
 	public void contractEdge(int id) throws NonexistingEdge{
 		if(id >= edges.size() || edges.get(id) == null){
 			throw new NonexistingEdge(id);
@@ -231,7 +195,7 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 		Edge e = edges.get(id);
 		Vertex from = e.getFrom();
 		Vertex to = e.getTo();
-		Vertex v = addVertex();
+		Vertex v = addVertex(from.getValue() + to.getValue());
 		for(Edge edge : from){
 			if(from == edge.getFrom()){
 				edge.setFrom(v);
@@ -253,6 +217,16 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 		removeEdge(e);
 	}
 	/**
+	 * Remove all edge loops.
+	 */
+	public void removeLoops(){
+		for(Edge e : edges){
+			if(e.isLoop()){
+				removeEdge(e);
+			}
+		}
+	}
+	/**
 	 * Get string representing the graph. 
 	 * Vertex - (id;value), Edge - [idFrom;value;idTo]
 	 * @return String representign the graph.
@@ -260,7 +234,6 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	@Override
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
-		clear();
 		sb.append(directed);
 		sb.append("\n");
 		for(Vertex v : vertices){
@@ -297,7 +270,6 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	 */
 	public void exportDot(String filePath, String graphName){
 		try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath))){
-			clear();
 			if(directed){
 				out.write("digraph ");
 			}
@@ -314,7 +286,7 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 			}
 			out.write("}");
 		} catch(IOException ioe){
-			System.err.println("Given file " + filePath + " cannot be used.");
+			System.err.println(ioe);
 		}
 	}
 	/**
@@ -367,7 +339,6 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	 */
 	public void exportMermaid(String filePath){
 		try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath))){
-			clear();
 			out.write("graph TD;\n");
 			for(Vertex v : vertices){
 				out.write(mermaidVertex(v));
@@ -376,7 +347,7 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 				out.write(mermaidEdge(e));
 			}
 		} catch(IOException ioe){
-			System.err.println("Given file " + filePath + " cannot be used.");
+			System.err.println(ioe);
 		}
 	}
 	/**
@@ -448,19 +419,35 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 				else if(ch == ')'){
 					sb.delete(0,1);
 					String[] components = sb.toString().split(";");
-					addVertex(Double.parseDouble(components[1]), Integer.parseInt(components[0]));
+					if(components.length == 1){
+						addVertex(Double.parseDouble(components[0]));
+					}
+					else if(components.length == 2){
+						addVertex(Double.parseDouble(components[1]), Integer.parseInt(components[0]));
+					}
 					sb = new StringBuilder();
 				}
 				else if(ch == ']'){
 					sb.delete(0,1);
 					String[] components = sb.toString().split(";");
-					addEdge(Double.parseDouble(components[1]), Integer.parseInt(components[0]), Integer.parseInt(components[2]));
+					if(components.length == 2){
+						addEdge(Integer.parseInt(components[0]), Integer.parseInt(components[1]));
+					}
+					else if(components.length == 3){
+						addEdge(Double.parseDouble(components[1]), Integer.parseInt(components[0]), Integer.parseInt(components[2]));
+					}
+					else{
+						return false;
+					}
 					sb = new StringBuilder();
 				}
 			}
 			return true;
-		} catch(IOException | NonexistingVertex ioe){
-			System.err.println("Given file " + filePath + " cannot be used.");
+		} catch(IOException ioe){
+			System.err.println(ioe);
+			return false;
+		} catch(NumberFormatException nfe){
+			System.err.println(nfe);
 			return false;
 		}
 	}
@@ -469,7 +456,6 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	 * @return Newly constructed Iterator.
 	 */
 	public Iterator<Vertex> iterator(){
-		clear();
 		return new Iterator<Vertex>(){
 			private int index = 0;
 			public boolean hasNext(){
@@ -487,16 +473,11 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	@Override
 	public Graph clone(){
 		Graph G = new Graph(directed);
-		clear();
 		for(Vertex v : vertices){
 			G.addVertex(v.getValue(), v.getId());
 		}
 		for(Edge e : edges){
-			try{
-				G.addEdge(e.getValue(), e.getFrom().getId(), e.getTo().getId());
-			} catch(NonexistingVertex nv){
-				System.err.println(nv);
-			}
+			G.addEdge(e.getValue(), e.getFrom().getId(), e.getTo().getId());
 		}
 		return G;
 	}

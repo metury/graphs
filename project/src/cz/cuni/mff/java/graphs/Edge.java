@@ -10,19 +10,23 @@ public class Edge{
 	private Vertex from;
 	/** The vertex at the end (or the second if the graph is undirected). */
 	private Vertex to;
+	/** Identification of this edge in graph. */
 	private int id;
 	/**
 	 * General constructor of the edge. Also add this new edgo to its vertices.
 	 * @param value Is the value of the edge.
 	 * @param from The first vertex (beginning).
 	 * @param to The second vertex (ending).
+	 * @param id Identication number of this edge.
 	 */
 	public Edge(double value, Vertex from, Vertex to, int id){
 		this.value = value;
 		this.from = from;
 		this.to = to;
 		from.addEdge(this);
-		to.addEdge(this);
+		if(from != to){
+			to.addEdge(this);
+		}
 	}
 	/**
 	 * Get the value of the edge.
@@ -38,9 +42,17 @@ public class Edge{
 	public void setValue(double value){
 		this.value = value;
 	}
+	/**
+	 * Get the id of the edge.
+	 * @return Id of the edge.
+	 */
 	public int getId(){
 		return id;
 	}
+	/**
+	 * Set the id of the edge.
+	 * @param id Is the new id.
+	 */
 	public void setId(int id){
 		this.id = id;
 	}
@@ -61,23 +73,38 @@ public class Edge{
 		return sb.toString();
 	}
 	/**
-	 * Get the ID of from vertex.
-	 * @return Integer representing vertex 'from'.
+	 * Get the begining vertex.
+	 * @return Begining vertex.
 	 */
 	public Vertex getFrom(){
 		return from;
 	}
 	/**
-	 * Get the ID of to vertex.
-	 * @return Integer represenitng vertex 'to'.
+	 * Get the ending vertex.
+	 * @return Ending vertex.
 	 */
 	public Vertex getTo(){
 		return to;
 	}
+	/**
+	 * Set the ending vertex.
+	 * @param v New vertex.
+	 */
 	public void setTo(Vertex v){
 		to = v;
 	}
+	/**
+	 * Set the begining vertex.
+	 * @param v New vertex.
+	 */
 	public void setFrom(Vertex v){
 		from = v;
+	}
+	/**
+	 * If the edge is loop.
+	 * @return True if it is a loop.
+	 */
+	public boolean isLoop(){
+		return from == to;
 	}
 }
