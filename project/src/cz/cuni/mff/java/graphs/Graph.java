@@ -34,6 +34,9 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 		edges = new ArrayList<Edge>();
 		importGraph(fileName);
 	}
+	public boolean isDirected(){
+		return directed;
+	}
 	/**
 	 * Add vertex to the graph.
 	 * @param value Is the value of the vertex.

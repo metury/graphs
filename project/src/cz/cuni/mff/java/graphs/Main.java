@@ -60,5 +60,13 @@ class Main{
 		G.exportMermaid("./testing/contract.md");
 		
 		System.out.println();
+		
+		System.out.print("Je graf spojený? ");
+		System.out.println(GraphAlgorithms.isConnected(G));
+		System.out.print("Pokud je orientovaný, je ostře spojený? ");
+		System.out.println(GraphAlgorithms.isStronglyConnected(G));
+		System.out.print("Přidáme separátní vrchol. Je graf spojený? ");
+		G.addVertex();
+		System.out.println(GraphAlgorithms.isConnected(G));
 	}
 }
