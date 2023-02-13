@@ -239,9 +239,12 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	 * Remove all edge loops.
 	 */
 	public void removeLoops(){
-		for(int i = 0; i < edges.size(); ++i){
+		for(int i = 0; i < edges.size();){
 			if(edges.get(i).isLoop()){
 				edges.remove(i);
+			}
+			else{
+				i++;
 			}
 		}
 	}
