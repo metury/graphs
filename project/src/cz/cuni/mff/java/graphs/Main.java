@@ -115,11 +115,11 @@ class Main{
 			System.out.print("Hotové: ");
 			for(int i = 0; i < MAX; ++i){
 				Graph G = gen(v, 3*v);
-				out.write("| V: ");
+				out.write("| [V: ");
 				out.write(Integer.toString(v));
 				out.write(" E: ");
 				out.write(Integer.toString(3*v));
-				out.write(" | ");
+				out.write("](./graphs/" + i + ") | ");
 				long start = clock.millis();
 				int result = GraphAlgorithms.minCutProb(G);
 				long end = clock.millis();

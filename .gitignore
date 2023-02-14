@@ -1,5 +1,2 @@
 *.class
-project/src/docs/
-*.dot
-*.gv
 *.svg
