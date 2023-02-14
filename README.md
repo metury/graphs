@@ -13,7 +13,7 @@ Tento zápočtový program bude knihovna pro informatické grafy napsané v jav�
 > 2) při exportu to mohlo zároveň nějak pěkně prezentovat i výsledky implementovaného algoritmu/implementovaných algoritmů
 > 3) a ke knihovně byla k dispozici i jednoduchá aplikace, která bude demonstrovat její funkčnost.
 
-## Dokumantac
+## Dokumantace
 
 V daném projektu je hlavní dokumentace pomocí javadoc. Mimo to je zde i abstraktnější a kratší dokumentace ručně sepsaná v [dokumentace](project/src/dokumentace.md).
 

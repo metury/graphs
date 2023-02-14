@@ -39,7 +39,6 @@ public class GraphAlgorithms{
 			return v1 > v2 ? v2 : v1;
 		}
 	}
-	// TODO redo brute force for more efficient way.
 	/**
 	 * Recursive algorithm on min cut with brute force.
 	 * @param G Is the given graph.
