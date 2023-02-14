@@ -108,4 +108,12 @@ public class Edge{
 	public boolean isLoop(){
 		return from == to;
 	}
+	/**
+	 * If one of the vertices is the same as the one given.
+	 * @param v The given vertex.
+	 * @return True if one of the vertices is same as the given one.
+	 */
+	public boolean isIncident(Vertex v){
+		return (from == v) || (to == v);
+	}
 }

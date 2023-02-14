@@ -11,7 +11,7 @@ import java.io.*;
  */
 public class GraphAlgorithms{
 	/**
-	 * Karger's Stain algorithm for fast min cut.
+	 * Karger's Stein algorithm for fast min cut.
 	 * @param G Is the graph to find min cut.
 	 * @return The size of the minimal cut.
 	 */
@@ -31,14 +31,15 @@ public class GraphAlgorithms{
 			return minCutBruteForce(G);
 		}
 		else{
-			long t = Math.round(Math.ceil(G.vertexSize()/Math.sqrt(2) + 1));
-			Graph H1 = minCutStep(G,t,r);
-			Graph H2 = minCutStep(G,t,r);
+			long t = Math.round(Math.ceil(1+(G.vertexSize()/Math.sqrt(2))));
+			Graph H1 = contract(G,t,r);
+			Graph H2 = contract(G,t,r);
 			int v1 = fastMinCutRecursion(H1,r);
 			int v2 = fastMinCutRecursion(H2,r);
 			return v1 > v2 ? v2 : v1;
 		}
 	}
+	// TODO redo brute force for more efficient way.
 	/**
 	 * Recursive algorithm on min cut with brute force.
 	 * @param G Is the given graph.
@@ -64,10 +65,17 @@ public class GraphAlgorithms{
 		}
 		for(int i = 0; i < G.edgeSize(); ++i){
 			try{
-				Edge e = G.removeEdge(i);
-				int result = minCutBruteForceRecursion(G, removed+1, min);
+				Graph H = G.clone();
+				Edge edge = H.removeEdge(i);
+				int removedEdges = 0;
+				for(Edge e : edge.getFrom()){
+					if(e.isIncident(edge.getTo())){
+						H.removeEdge(e);
+						removedEdges++;
+					}
+				}
+				int result = minCutBruteForceRecursion(H, removed + 1 + removedEdges, min);
 				min = min > result ? result : min;
-				G.addEdge(e.getFrom().getId(), e.getTo().getId());
 			} catch(NonexistingEdge ne){
 				System.err.println(ne);
 			}
@@ -87,7 +95,7 @@ public class GraphAlgorithms{
 		Random r = new Random();
 		int min = G.edgeSize();
 		for(int i = 0; i < G.vertexSize(); ++i){
-			Graph H = minCutStep(G,2,r);
+			Graph H = contract(G,2,r);
 			int minX = H.edgeSize();
 			min = min > minX ? minX : min;
 		}
@@ -120,7 +128,7 @@ public class GraphAlgorithms{
 	 * @param r Is pseudo random generator.
 	 * @return Graph that was made after several contractions.
 	 */
-	private static Graph minCutStep(Graph G, long nrVertices, Random r){
+	private static Graph contract(Graph G, long nrVertices, Random r){
 		Graph H = G.clone();
 		H.removeLoops();
 		while(H.vertexSize() > nrVertices){
@@ -225,7 +233,9 @@ public class GraphAlgorithms{
 				out.write("**\n\nDíky tomu, že jsme mohli použít hledání hrubou silou, tak Karger Steinův algoritmus nám vrátí stejný výsledek, protože v tak malém grafu hend používá hrubou sílu.\n");
 			}
 			else{
-				out.write("Protože graf je celkem velký, tak není doporučený použít hledání hrubou sílou, ale za to můžeme na druhou stranu použít celkem dost efektivní algoritmus Karger-Steinův, který používá předem ukázanou kontrakci hrany. Přesně je to rekurzivní používání daného postupu na nižším počtu vrcholů, dokud se nedostane na nějakou hodnotu, po které se už použije hrubá síla. Konkrétní výsledek potom je: **");
+				out.write("Protože graf je celkem velký, tak není doporučený použít hledání hrubou sílou, ale za to můžeme na druhou stranu použít celkem dost efektivní algoritmus Karger-Steinův,");
+				out.write(" který používá předem ukázanou kontrakci hrany. Přesně je to rekurzivní používání daného postupu na nižším počtu vrcholů, dokud se nedostane na nějakou hodnotu,");
+				out.write(" po které se už použije hrubá síla. Konkrétní výsledek potom je: **");
 				out.write(Integer.toString(fastMinCut(G)));
 				out.write("**\n");
 			}

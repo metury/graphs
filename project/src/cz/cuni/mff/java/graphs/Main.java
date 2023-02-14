@@ -1,6 +1,8 @@
 package cz.cuni.mff.java.graphs;
 
 import java.util.Random;
+import java.time.Clock;
+import java.io.*;
 
 /**
  * Main class for testing and showcasing graphs library.
@@ -12,6 +14,7 @@ class Main{
 	 */
 	public static void main(String[] args){
 		showcase();
+		hardTest(25, "./testing/hardTest.md");
 	}
 	/**
 	 * Generate pseudo random graph.
@@ -91,15 +94,65 @@ class Main{
 		System.out.println(GraphAlgorithms.fastMinCut(G));
 		
 		System.out.println();
-		System.out.println(" + Jeětě generace ukázky algoritmu pro minimální řez. Jsou v `./testing/minCut.md` a `./testing/minCutPeterson.md`.");
+		System.out.println(" + Ještě generace ukázky algoritmu pro minimální řez. Jsou v `./testing/minCut.md` a `./testing/minCutPeterson.md`.");
 		
 		GraphAlgorithms.minCutVisualize(G, "./testing/minCut.md");
 		GraphAlgorithms.minCutVisualize(H, "./testing/minCutPetersen.md");
 	}
 	/**
-	 * Hard testing methods.
+	 * Hard testing methods. For algorithms and time. Make table in markdown.
+	 * Also make all graphs in markdown mermaid.
+	 * @param MAX Is the number of tested graphs.
+	 * @param filePath Path to the export file (in markdown).
 	 */
-	public static void hardTest(){
-		
+	public static void hardTest(int MAX, String filePath){
+		int v = 5;
+		Clock clock = Clock.systemDefaultZone();
+		System.out.println(" + Testovací část algoritumů (může zabrat delší dobu)");
+		try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath))){
+			out.write("| Graph | Prob T | Prob R | Brute T | Brute R | KS T | KS R |\n");
+			out.write("| ----- | ------ | ------ | ------- | ------- | ---- | ---- |\n");
+			System.out.print("Hotové: ");
+			for(int i = 0; i < MAX; ++i){
+				Graph G = gen(v, 3*v);
+				out.write("| V: ");
+				out.write(Integer.toString(v));
+				out.write(" E: ");
+				out.write(Integer.toString(3*v));
+				out.write(" | ");
+				long start = clock.millis();
+				int result = GraphAlgorithms.minCutProb(G);
+				long end = clock.millis();
+				out.write(Long.toString(end - start));
+				out.write(" | ");
+				out.write(Integer.toString(result));
+				out.write(" | ");
+				if(v < 16){
+					start = clock.millis();
+					result = GraphAlgorithms.minCutBruteForce(G);
+					end = clock.millis();
+					out.write(Long.toString(end - start));
+				}
+				else out.write("`x`");
+				out.write(" | ");
+				if(v < 16) out.write(Integer.toString(result));
+				else out.write("`x`");
+				out.write(" | ");
+				start = clock.millis();
+				result = GraphAlgorithms.fastMinCut(G);
+				end = clock.millis();
+				out.write(Long.toString(end - start));
+				out.write(" | ");
+				out.write(Integer.toString(result));
+				out.write(" |\n");
+				G.exportMermaidMd("./testing/graphs/"+i+".md");
+				v += 1;
+				System.out.print("["+i+"]");
+			}
+			out.write("\n*`x` znamená, že brute force už zabere moc času a tedy už není měřený.*");
+			System.out.println();
+		} catch(IOException ioe){
+			System.err.println(ioe);
+		}
 	}
 }

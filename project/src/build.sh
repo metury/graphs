@@ -18,7 +18,7 @@ echo "Hotovo"
 echo "========"
 echo "Spuštění"
 echo "========"
-java cz.cuni.mff.java.graphs.Main
+java cz.cuni.mff.java.graphs.Main > ./testing/OUTPUT
 echo "========"
 echo "Konec"
 echo "========"

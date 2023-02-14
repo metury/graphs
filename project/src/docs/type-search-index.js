@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"cz.cuni.mff.java.graphs","l":"Edge"},{"p":"cz.cuni.mff.java.graphs","l":"Graph"},{"p":"cz.cuni.mff.java.graphs","l":"GraphAlgorithms"},{"p":"cz.cuni.mff.java.graphs","l":"NonexistingEdge"},{"p":"cz.cuni.mff.java.graphs","l":"NonexistingVertex"},{"p":"cz.cuni.mff.java.graphs","l":"Vertex"}]

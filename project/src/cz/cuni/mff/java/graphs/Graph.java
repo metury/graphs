@@ -394,6 +394,32 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 		}
 	}
 	/**
+	 * Export mermaid graph to markdown file.
+	 * @param filePath Which export file to use.
+	 */
+	public void exportMermaidMd(String filePath){
+		exportMermaidMd(filePath, false);
+	}
+	/**
+	 * Export mermaid graph to markdown file.
+	 * @param filePath Which export file to use.
+	 * @param append If the file should be appended or not.
+	 */
+	public void exportMermaidMd(String filePath, boolean append){
+		try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath, append))){
+			out.write("```mermaid\ngraph TD;\n");
+			for(Vertex v : vertices){
+				out.write(mermaidVertex(v));
+			}
+			for(Edge e : edges){
+				out.write(mermaidEdge(e));
+			}
+			out.write("```\n");
+		} catch(IOException ioe){
+			System.err.println(ioe);
+		}
+	}
+	/**
 	 * Export graph to mermaid syntax. With one edge dotted. https://mermaid.js.org/
 	 * @param filePath Which file should be used for export.
 	 * @param append If the text should be appended to the file or overwrite the file.

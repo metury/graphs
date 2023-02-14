@@ -61,7 +61,7 @@ graph TD;
 
 ## Krok 2
 
-V tomhle kroku kontrahujeme hranu `[0;NaN;1]`.
+V tomhle kroku kontrahujeme hranu `[1;NaN;3]`.
 
 ```mermaid
 graph TD;
@@ -69,27 +69,27 @@ graph TD;
 1("1.0");
 2("2.0");
 	2 -- "0.0" --- 0;
-	0 -. "1.0" -.- 1;
+	0 -- "1.0" --- 1;
 	1 -- "2.0" --- 2;
 	0 -- "3.0" --- 2;
 	0 -- "4.0" --- 2;
-	1 -- "5.0" --- 2;
+	1 -. "5.0" -.- 2;
 ```
 
 A získáváme:
 
 ```mermaid
 graph TD;
-0("2.0");
+0("0.0");
 1(" ");
-	0 -- "0.0" --- 1;
-	1 -- "2.0" --- 0;
-	1 -- "3.0" --- 0;
-	1 -- "4.0" --- 0;
-	1 -- "5.0" --- 0;
+	1 -- "0.0" --- 0;
+	0 -- "1.0" --- 1;
+	1 -- "2.0" --- 1;
+	0 -- "3.0" --- 1;
+	0 -- "4.0" --- 1;
 ```
 
-Tímto konkrétním postupem jsem došli k výsledku, že minimální řez má velikost nejvýše: **5**
+Tímto konkrétním postupem jsem došli k výsledku, že minimální řez má velikost nejvýše: **4**
 
 *Pokud bychom tento algoritmus zopakovali aspoň tolikrát, kolik je vrcholů, tak získáme výsledek: **3***
 
