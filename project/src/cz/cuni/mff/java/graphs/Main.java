@@ -119,7 +119,7 @@ class Main{
 				out.write(Integer.toString(v));
 				out.write(" E: ");
 				out.write(Integer.toString(3*v));
-				out.write("](./graphs/" + i + ") | ");
+				out.write("](./graphs/" + i + ".md) | ");
 				long start = clock.millis();
 				int result = GraphAlgorithms.minCutProb(G);
 				long end = clock.millis();

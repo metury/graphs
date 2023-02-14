@@ -20,6 +20,6 @@ V daném projektu je hlavní dokumentace pomocí javadoc a přesněji je i na gi
 Poté zde také jsou ukázky algoritmů:
 
 - Minimální řez na jednom [grafu](project/src/testing/import) a to je pak souboru [markdown](project/src/testing/minCut.md).
-- Další je minimální řez [Petersenova grafu](project/src/testing/petersen) a pak [markdown](project/src/testing/minCutPeterse.md) *(popřípadě [Petersen graph](https://en.wikipedia.org/wiki/Petersen_graph))*.
+- Další je minimální řez [Petersenova grafu](project/src/testing/petersen) a pak [markdown](project/src/testing/minCutPetersen.md) *(popřípadě [Petersen graph](https://en.wikipedia.org/wiki/Petersen_graph))*.
 - Poslední je tady teké výsledek [testu](project/src/testing/hardTest.md).
 - Také je zde uložený [výstup](project/src/testing/OUTPUT).
