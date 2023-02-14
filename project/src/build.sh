@@ -16,5 +16,6 @@ javadoc cz/cuni/mff/java/graphs/*.java -d docs -quiet
 echo "Hotovo"
 
 printf " * Spuštění -> "
+mkdir -p testing/
 java cz.cuni.mff.java.graphs.Main > ./testing/OUTPUT
 echo "Konec"
