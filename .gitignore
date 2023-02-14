@@ -1,2 +1,3 @@
 *.class
 *.svg
+/project/src/docs/*
