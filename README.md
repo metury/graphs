@@ -15,7 +15,7 @@ Tento zápočtový program bude knihovna pro informatické grafy napsané v jav�
 
 ## Dokumantac
 
-V daném projektu je hlavní dokumentace pomocí javadoc a přesněji je i na gitu v [index](project/src/docs/index.html). Mimo to je zde i abstraktnější a kratší dokumentace ručně sepsaná v [dokumentace](project/src/dokumentace.md).
+V daném projektu je hlavní dokumentace pomocí javadoc. Mimo to je zde i abstraktnější a kratší dokumentace ručně sepsaná v [dokumentace](project/src/dokumentace.md).
 
 Poté zde také jsou ukázky algoritmů:
 
