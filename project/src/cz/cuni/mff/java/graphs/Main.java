@@ -164,7 +164,7 @@ public class Main{
 				}
 				else out.write("`x`");
 				out.write(" | ");
-				if(v < 12) out.write(Integer.toString(result));
+				if(v < 16) out.write(Integer.toString(result));
 				else out.write("`x`");
 				out.write(" | ");
 				start = clock.millis();

@@ -22,6 +22,6 @@ Poté zde také jsou ukázky algoritmů:
 - Minimální řez na jednom [grafu](project/src/testing/import/import) a to je pak souboru [markdown](project/src/testing/showcase/minCut.md).
 - Další je minimální řez [Petersenova grafu](project/src/testing/import/petersen) a pak [markdown](project/src/testing/showcase/minCutPetersen.md) *(popřípadě [Petersen graph](https://en.wikipedia.org/wiki/Petersen_graph))*.
 - Dalšími vygenerovanými soubory jsou pro Dujkstrův algoritmus na neorientovaném [grafu](project/src/testing/showcase/dijkstra.md) a taky na orientovaném [graf](project/src/testing/showcase/didijkstra.md).
-- Také je zde ukázka algoritmu minimální kostry souvislém [grafu](project/src/testing/showcase/mst.md) a taky na nesouvislém [graf](project/src/testing/showcase/sepmst.md) - nicméně by mělo být jedno jestli je graf orientovaný nebo ne (protože se překonvertuje na neorientovaný).
+- Také je zde ukázka algoritmu minimální kostry souvislém [grafu](project/src/testing/showcase/mst.md) a taky na nesouvislém [graf](project/src/testing/showcase/sepmst.md).
 - Poslední je tady teké výsledek [testu](project/src/testing/hardTest.md).
 - Také je zde uložený [výstup](project/src/testing/OUTPUT).
