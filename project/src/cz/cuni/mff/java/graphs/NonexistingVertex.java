@@ -6,7 +6,7 @@ import java.lang.StringBuilder;
  * Exception when given Vertex does not exist.
  * To be precise given ID of the Vertex.
  */
-public class NonexistingVertex extends Exception{
+public class NonexistingVertex extends RuntimeException{
 	/** Given wrong ID. */
 	private int id;
 	/**

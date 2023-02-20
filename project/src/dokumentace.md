@@ -44,6 +44,10 @@ Všechny algoritmy dané grafy kopíruje a nijak je nepřepisuje. Jedním je alg
 
 Jako další je zde metoda, která vytvoří dokument ve formátu markdown, který ukazuje, jak algoritmus pro hledání minimálního řezu pomocí kontrakce funguje a také dodává i výsledky ostatních algoritmů.
 
+## Dijkstra
+
+## MST
+
 # Main
 
 Knihovna také obsahuje jeden soubor `Main.java`, který ukazuje, jak dané metody fungují.

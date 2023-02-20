@@ -6,7 +6,7 @@ import java.lang.StringBuilder;
  * Exception when given Edge does not exist.
  * To be precise given ID of the edge.
  */
-public class NonexistingEdge extends Exception{
+public class NonexistingEdge extends RuntimeException{
 	/** Given wrong ID. */
 	private int id;
 	/**

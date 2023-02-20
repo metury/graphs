@@ -369,6 +369,37 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 		return sb.toString();
 	}
 	/**
+	 * Export graph as a mermaid diagram.
+	 * @param out Is the output writer which is used for the export.
+	 * @param markdown Is boolean if the code header and footer should be added.
+	 * @param dottedEdges Is a list of edges, that are dotted.
+	 * @throws IOException If the given writer will not work properly.
+	 */
+	public void exportMermaid(BufferedWriter out, boolean markdown, boolean[] dottedEdges) throws IOException{
+		if(markdown){
+			out.write("```mermaid\n");
+		}
+		out.write("graph TD;\n");
+		for(Vertex v : vertices){
+			out.write(mermaidVertex(v));
+		}
+		for(int i = 0; i < edges.size(); ++i){
+			if(dottedEdges[i]){
+				out.write(mermaidEdgeDotted(edges.get(i)));
+			}
+			else{
+				out.write(mermaidEdge(edges.get(i)));
+			}
+		}
+		if(markdown){
+			out.write("```\n");
+		}
+		out.write("\n");
+	}
+	public void exportMermaid(BufferedWriter out, boolean markdown) throws IOException{
+		exportMermaid(out, markdown, new boolean[edges.size()]);
+	}
+	/**
 	 * Export graph to mermaid syntax. https://mermaid.js.org/
 	 * @param filePath Which file should be used for export.
 	 */
@@ -382,13 +413,7 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	 */
 	public void exportMermaid(String filePath, boolean append){
 		try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath, append))){
-			out.write("graph TD;\n");
-			for(Vertex v : vertices){
-				out.write(mermaidVertex(v));
-			}
-			for(Edge e : edges){
-				out.write(mermaidEdge(e));
-			}
+			exportMermaid(out, false, new boolean[edges.size()]);
 		} catch(IOException ioe){
 			System.err.println(ioe);
 		}
@@ -407,14 +432,7 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	 */
 	public void exportMermaidMd(String filePath, boolean append){
 		try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath, append))){
-			out.write("```mermaid\ngraph TD;\n");
-			for(Vertex v : vertices){
-				out.write(mermaidVertex(v));
-			}
-			for(Edge e : edges){
-				out.write(mermaidEdge(e));
-			}
-			out.write("```\n");
+			exportMermaid(out, true, new boolean[edges.size()]);
 		} catch(IOException ioe){
 			System.err.println(ioe);
 		}
@@ -427,18 +445,9 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	 */
 	public void exportMermaid(String filePath, boolean append, int idDotted){
 		try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath, append))){
-			out.write("graph TD;\n");
-			for(Vertex v : vertices){
-				out.write(mermaidVertex(v));
-			}
-			for(Edge e : edges){
-				if(idDotted == e.getId()){
-					out.write(mermaidEdgeDotted(e));
-				}
-				else{
-					out.write(mermaidEdge(e));
-				}
-			}
+			boolean[] dotted = new boolean[edges.size()];
+			dotted[idDotted] = true;
+			exportMermaid(out, false, dotted);
 		} catch(IOException ioe){
 			System.err.println(ioe);
 		}
@@ -450,6 +459,7 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	 */
 	private String mermaidVertex(Vertex v){
 		StringBuilder sb = new StringBuilder();
+		sb.append("\t");
 		sb.append(v.getId());
 		sb.append("(\"");
 		if(!Double.isNaN(v.getValue())){

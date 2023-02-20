@@ -7,36 +7,42 @@ import java.io.*;
 /**
  * Main class for testing and showcasing graphs library.
  */
-class Main{
+public class Main{
 	/**
 	 * Main functin.
 	 * @param args Are argumetns.
 	 */
 	public static void main(String[] args){
 		showcase();
-		hardTest(25, "./testing/hardTest.md");
+		hardTest(1, "./testing/hardTest.md");
+		//MST.visualizeMST(G, "./testing/MST.md");
 	}
 	/**
 	 * Generate pseudo random graph.
+	 * @param sizeV The number of vertices.
+	 * @param sizeE The number of Edges.
+	 * @param directed If the graph is directed or not.
 	 * @return Generated Graph.
 	 */
-	public static Graph gen(int sizeV, int sizeE){
+	public static Graph gen(int sizeV, int sizeE, boolean directed){
 		Random r = new Random();
-		Graph G = new Graph(false);
+		Graph G = new Graph(directed);
 		for(int i = 0; i < sizeV; ++i){
 			G.addVertex(i);
 		}
 		for(int i = 0; i < sizeE; ++i){
-			G.addEdge(i, r.nextInt(sizeV), r.nextInt(sizeV));
+			G.addEdge(r.nextDouble(), r.nextInt(sizeV), r.nextInt(sizeV));
 		}
 		return G;
 	}
 	/** Showcase of this library. */
 	public static void showcase(){
 		System.out.println(" + Základní funkce");
-		System.out.println("Vytváření grafu pomocí importu ze souboru `./testing/import`. A taky Petersonův graf z `./testing/petersen`.");
-		Graph G = new Graph("./testing/import"); // Using import.
-		Graph H = new Graph("./testing/petersen");
+		String importt = "./testing/import/import";
+		String petersen = "./testing/import/petersen";
+		System.out.println("Vytváření grafu pomocí importu ze souboru `" + importt + "`. A taky Petersonův graf z `" + petersen + "`.");
+		Graph G = new Graph(importt);
+		Graph H = new Graph(petersen);
 		
 		System.out.println();
 		
@@ -45,36 +51,39 @@ class Main{
 		
 		System.out.println();
 		
-		System.out.println("Export v DOT Language do souboru `./testing/export.gv`");
-		G.exportDot("./testing/export.gv");
-		System.out.println("Export v DOT Language do souboru `./testing/exportPetersen.gv`");
-		G.exportDot("./testing/exportPetersen.gv");
+		String exportgv = "./testing/export/export.gv";
+		String petersengv = "./testing/export/petersen.gv";
+		
+		System.out.println("Export v DOT Language do souboru `" + exportgv +"`");
+		G.exportDot(exportgv);
+		System.out.println("Export v DOT Language do souboru `" + petersengv + "`");
+		G.exportDot(petersengv);
 		
 		System.out.println();
 		
-		System.out.println("Export v Mermaid do souboru `./testing/mermaid.md`");
-		G.exportMermaid("./testing/mermaid.md");
+		String mermaid = "./testing/export/mermaid.md";
+		
+		System.out.println("Export v Mermaid do souboru `" + mermaid + "'");
+		G.exportMermaid(mermaid);
 		
 		System.out.println();
 		
-		System.out.println("Kontrakce nulté hrany. A poté tisk po kontrakci a i export v Mermaid do `./testing/contract.md.`");
-		try{
-			G.contractEdge(0);
-		} catch(NonexistingEdge ne){
-			System.err.println(ne);
-		}
+		String contractMermaid = "./testing/export/contract.md";
+		
+		System.out.println("Kontrakce nulté hrany. A poté tisk po kontrakci a i export v Mermaid do `"+ contractMermaid +"`");
+		G.contractEdge(0);
 		System.out.println(G);
-		G.exportMermaid("./testing/contract.md");
+		G.exportMermaid(contractMermaid);
 		
 		System.out.println();
 		
-		System.out.println(" + Spojitost");
+		System.out.println(" + Souvislost");
 		
-		System.out.print("Je graf spojený? ");
+		System.out.print("Je graf souvislý? ");
 		System.out.println(GraphAlgorithms.isConnected(G));
-		System.out.print("Je ostře spojený? ");
+		System.out.print("Je ostře souvislý? ");
 		System.out.println(GraphAlgorithms.isStronglyConnected(G));
-		System.out.print("Přidáme separátní vrchol. Je graf spojený? ");
+		System.out.print("Přidáme separátní vrchol. Je graf souvislý? ");
 		Vertex v = G.addVertex();
 		System.out.println(GraphAlgorithms.isConnected(G));
 		
@@ -83,21 +92,46 @@ class Main{
 		System.out.println(" + Minimální řezy");
 		
 		System.out.print("Jaký je minimální řez grafu pomocí pravděpodobnostního algoritmu? ");
-		System.out.println(GraphAlgorithms.minCutProb(G));
+		System.out.println(MinCut.minCutProb(G));
 		
-		System.out.print("Je to nula, protože není spojený. A co když odstraníme daný vrchol? ");
+		System.out.print("Je to nula, protože není souvislý. A co když odstraníme daný vrchol? ");
 		G.removeVertex(v);
-		System.out.println(GraphAlgorithms.minCutProb(G));
+		System.out.println(MinCut.minCutProb(G));
 		System.out.print("Také lze minimální řez najít pomocí hrubé síly: ");
-		System.out.println(GraphAlgorithms.minCutBruteForce(G));
+		System.out.println(MinCut.minCutBruteForce(G));
 		System.out.print("Jako poslední je nejideálnější (poměr rychlost a pravděpodobnost korekce) Karger's-Stein algoritmus: ");
-		System.out.println(GraphAlgorithms.fastMinCut(G));
+		System.out.println(MinCut.fastMinCut(G));
 		
 		System.out.println();
-		System.out.println(" + Ještě generace ukázky algoritmu pro minimální řez. Jsou v `./testing/minCut.md` a `./testing/minCutPeterson.md`.");
 		
-		GraphAlgorithms.minCutVisualize(G, "./testing/minCut.md");
-		GraphAlgorithms.minCutVisualize(H, "./testing/minCutPetersen.md");
+		String minCut = "./testing/showcase/minCut.md";
+		String minCutPetersen = "./testing/showcase/minCutPeterse.md";
+		System.out.println(" + Ještě generace ukázky algoritmu pro minimální řez. Jsou v `"+ minCut +"` a `"+ minCutPetersen +"`.");
+		
+		MinCut.minCutVisualize(G, minCut);
+		MinCut.minCutVisualize(H, minCutPetersen);
+		
+		System.out.println();
+		String dijkstra = "./testing/showcase/dijkstra.md";
+		String didijkstra = "./testing/showcase/didijkstra.md";
+		System.out.println(" + Další algoritmus je Dijkstrův algoritmus pro nejkratší cesty v grafu. Generace bude do souboru '"+ dijkstra +"' a '"+ didijkstra +"'");
+		
+		Graph D = gen(10, 30, false);
+		Dijkstra.dijkstraVisualize(D, D.getVertex(0), dijkstra);
+		
+		Graph D2 = gen(10, 40, true);
+		Dijkstra.dijkstraVisualize(D2, D2.getVertex(0), didijkstra);
+		
+		Graph M = gen(10,30, false);
+		Graph M2 = gen(10,40, true);
+		
+		System.out.println();
+		String mst = "./testing/showcase/mst.md";
+		String dimst = "./testing/showcase/dimst.md";
+		System.out.println(" + Posledním algoritmem je hledání minimální kostry. Opět dva příklady jsou v `"+ mst +"` a `"+ dimst +"`.");
+		
+		MST.visualizeMST(M, mst);
+		MST.visualizeMST(M2, dimst);
 	}
 	/**
 	 * Hard testing methods. For algorithms and time. Make table in markdown.
@@ -114,14 +148,14 @@ class Main{
 			out.write("| ----- | ------ | ------ | ------- | ------- | ---- | ---- |\n");
 			System.out.print("Hotové: ");
 			for(int i = 0; i < MAX; ++i){
-				Graph G = gen(v, 3*v);
+				Graph G = gen(v, 3*v, false);
 				out.write("| [V: ");
 				out.write(Integer.toString(v));
 				out.write(" E: ");
 				out.write(Integer.toString(3*v));
 				out.write("](./graphs/" + i + ".md) | ");
 				long start = clock.millis();
-				int result = GraphAlgorithms.minCutProb(G);
+				int result = MinCut.minCutProb(G);
 				long end = clock.millis();
 				out.write(Long.toString(end - start));
 				out.write(" | ");
@@ -129,7 +163,7 @@ class Main{
 				out.write(" | ");
 				if(v < 16){
 					start = clock.millis();
-					result = GraphAlgorithms.minCutBruteForce(G);
+					result = MinCut.minCutBruteForce(G);
 					end = clock.millis();
 					out.write(Long.toString(end - start));
 				}
@@ -139,7 +173,7 @@ class Main{
 				else out.write("`x`");
 				out.write(" | ");
 				start = clock.millis();
-				result = GraphAlgorithms.fastMinCut(G);
+				result = MinCut.fastMinCut(G);
 				end = clock.millis();
 				out.write(Long.toString(end - start));
 				out.write(" | ");

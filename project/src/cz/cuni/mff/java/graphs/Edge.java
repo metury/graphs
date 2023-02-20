@@ -116,4 +116,13 @@ public class Edge{
 	public boolean isIncident(Vertex v){
 		return (from == v) || (to == v);
 	}
+	/**
+	 * Get the second vertex of the edge with respect ot he given one.
+	 * For easier work with undirected graph.
+	 * @param v The first given vertex.
+	 * @return The second vertex.
+	 */
+	public Vertex getSecondVertex(Vertex v){
+		return v == from ? to : from;
+	}
 }

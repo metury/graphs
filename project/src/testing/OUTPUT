@@ -1,32 +1,36 @@
  + Základní funkce
-Vytváření grafu pomocí importu ze souboru `./testing/import`. A taky Petersonův graf z `./testing/petersen`.
+Vytváření grafu pomocí importu ze souboru `./testing/import/import`. A taky Petersonův graf z `./testing/import/petersen`.
 
 Tisk grafu import:
 true
 (0;NaN)(1;NaN)(2;NaN)(3;NaN)(4;NaN)
 [0;NaN;1][1;NaN;2][2;NaN;3][3;NaN;4][2;NaN;4][2;NaN;0][3;NaN;1][0;NaN;4]
 
-Export v DOT Language do souboru `./testing/export.gv`
-Export v DOT Language do souboru `./testing/exportPetersen.gv`
+Export v DOT Language do souboru `./testing/export/export.gv`
+Export v DOT Language do souboru `./testing/export/petersen.gv`
 
-Export v Mermaid do souboru `./testing/mermaid.md`
+Export v Mermaid do souboru `./testing/export/mermaid.md'
 
-Kontrakce nulté hrany. A poté tisk po kontrakci a i export v Mermaid do `./testing/contract.md.`
+Kontrakce nulté hrany. A poté tisk po kontrakci a i export v Mermaid do `./testing/export/contract.md`
 true
 (0;NaN)(1;NaN)(2;NaN)(3;NaN)
 [3;NaN;0][0;NaN;1][1;NaN;2][0;NaN;2][0;NaN;3][1;NaN;3][3;NaN;2]
 
- + Spojitost
-Je graf spojený? true
-Je ostře spojený? true
-Přidáme separátní vrchol. Je graf spojený? false
+ + Souvislost
+Je graf souvislý? true
+Je ostře souvislý? true
+Přidáme separátní vrchol. Je graf souvislý? false
 
  + Minimální řezy
 Jaký je minimální řez grafu pomocí pravděpodobnostního algoritmu? 0
-Je to nula, protože není spojený. A co když odstraníme daný vrchol? 3
+Je to nula, protože není souvislý. A co když odstraníme daný vrchol? 3
 Také lze minimální řez najít pomocí hrubé síly: 3
 Jako poslední je nejideálnější (poměr rychlost a pravděpodobnost korekce) Karger's-Stein algoritmus: 3
 
- + Ještě generace ukázky algoritmu pro minimální řez. Jsou v `./testing/minCut.md` a `./testing/minCutPeterson.md`.
+ + Ještě generace ukázky algoritmu pro minimální řez. Jsou v `./testing/showcase/minCut.md` a `./testing/showcase/minCutPeterse.md`.
+
+ + Další algoritmus je Dijkstrův algoritmus pro nejkratší cesty v grafu. Generace bude do souboru './testing/showcase/dijkstra.md' a './testing/showcase/didijkstra.md'
+
+ + Posledním algoritmem je hledání minimální kostry. Opět dva příklady jsou v `./testing/showcase/mst.md` a `./testing/showcase/dimst.md`.
  + Testovací část algoritumů (může zabrat delší dobu)
-Hotové: [0][1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16][17][18][19][20][21][22][23][24]
+Hotové: [0]
