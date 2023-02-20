@@ -369,7 +369,7 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 		return sb.toString();
 	}
 	/**
-	 * Export graph as a mermaid diagram.
+	 * Export graph as a mermaid diagram to a BuffereWriter.
 	 * @param out Is the output writer which is used for the export.
 	 * @param markdown Is boolean if the code header and footer should be added.
 	 * @param dottedEdges Is a list of edges, that are dotted.
@@ -396,6 +396,12 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 		}
 		out.write("\n");
 	}
+	/**
+	 * Export graph as a mermaid diagram to a BuffereWriter.
+	 * @param out Is the output writer which is used for the export.
+	 * @param markdown Is boolean if the code header and footer should be added.
+	 * @throws IOException If the given writer will not work properly.
+	 */
 	public void exportMermaid(BufferedWriter out, boolean markdown) throws IOException{
 		exportMermaid(out, markdown, new boolean[edges.size()]);
 	}
@@ -413,7 +419,7 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	 */
 	public void exportMermaid(String filePath, boolean append){
 		try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath, append))){
-			exportMermaid(out, false, new boolean[edges.size()]);
+			exportMermaid(out, false);
 		} catch(IOException ioe){
 			System.err.println(ioe);
 		}
@@ -432,7 +438,7 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 	 */
 	public void exportMermaidMd(String filePath, boolean append){
 		try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath, append))){
-			exportMermaid(out, true, new boolean[edges.size()]);
+			exportMermaid(out, true);
 		} catch(IOException ioe){
 			System.err.println(ioe);
 		}
@@ -611,5 +617,19 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 			G.addEdge(e.getValue(), e.getFrom().getId(), e.getTo().getId());
 		}
 		return G;
+	}
+	/**
+	 * Merge other graph to this one.
+	 * @param H Is the second graph.
+	 */
+	public void merge(Graph H){
+		for(Vertex v : H){
+			addVertex(v.getValue(), v.getId());
+		}
+		for(int i = 0; i < H.edgeSize(); ++i){
+			Edge e = H.getEdge(i);
+			addEdge(e.getValue(), e.getFrom().getId(), e.getTo().getId());
+		}
+		reIndex();
 	}
 }

@@ -27,7 +27,7 @@ Nyní už budeme postupně iterovat. S tím, že v každém momentu očíslujeme
 
 ## Krok 1
 
-V tomhle kroku kontrahujeme hranu `[1;NaN;3]`.
+V tomhle kroku kontrahujeme hranu `[0;NaN;3]`.
 
 ```mermaid
 graph TD;
@@ -39,8 +39,8 @@ graph TD;
 	0 -- "1.0" --- 1;
 	1 -- "2.0" --- 2;
 	0 -- "3.0" --- 2;
-	0 -- "4.0" --- 3;
-	1 -. "5.0" -.- 3;
+	0 -. "4.0" -.- 3;
+	1 -- "5.0" --- 3;
 	3 -- "6.0" --- 2;
 ```
 
@@ -48,48 +48,46 @@ A získáváme:
 
 ```mermaid
 graph TD;
-	0("0.0");
+	0("1.0");
 	1("2.0");
 	2(" ");
-	2 -- "0.0" --- 0;
-	0 -- "1.0" --- 2;
-	2 -- "2.0" --- 1;
-	0 -- "3.0" --- 1;
-	0 -- "4.0" --- 2;
+	2 -- "0.0" --- 2;
+	2 -- "1.0" --- 0;
+	0 -- "2.0" --- 1;
+	2 -- "3.0" --- 1;
+	0 -- "5.0" --- 2;
 	2 -- "6.0" --- 1;
 ```
 
 ## Krok 2
 
-V tomhle kroku kontrahujeme hranu `[1;NaN;3]`.
+V tomhle kroku kontrahujeme hranu `[3;NaN;0]`.
 
 ```mermaid
 graph TD;
 	0("0.0");
 	1("1.0");
 	2("2.0");
-	2 -- "0.0" --- 0;
-	0 -- "1.0" --- 2;
-	2 -- "2.0" --- 1;
-	0 -- "3.0" --- 1;
+	2 -. "1.0" -.- 0;
+	0 -- "2.0" --- 1;
+	2 -- "3.0" --- 1;
 	0 -- "4.0" --- 2;
-	2 -. "5.0" -.- 1;
+	2 -- "5.0" --- 1;
 ```
 
 A získáváme:
 
 ```mermaid
 graph TD;
-	0("0.0");
+	0("1.0");
 	1(" ");
-	1 -- "0.0" --- 0;
-	0 -- "1.0" --- 1;
-	1 -- "2.0" --- 1;
-	0 -- "3.0" --- 1;
-	0 -- "4.0" --- 1;
+	1 -- "2.0" --- 0;
+	1 -- "3.0" --- 0;
+	1 -- "4.0" --- 1;
+	1 -- "5.0" --- 0;
 ```
 
-Tímto konkrétním postupem jsem došli k výsledku, že minimální řez má velikost nejvýše: **4**
+Tímto konkrétním postupem jsem došli k výsledku, že minimální řez má velikost nejvýše: **3**
 
 *Pokud bychom tento algoritmus zopakovali aspoň tolikrát, kolik je vrcholů, tak získáme výsledek: **3***
 

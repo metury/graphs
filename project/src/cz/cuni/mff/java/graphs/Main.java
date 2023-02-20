@@ -14,8 +14,7 @@ public class Main{
 	 */
 	public static void main(String[] args){
 		showcase();
-		hardTest(1, "./testing/hardTest.md");
-		//MST.visualizeMST(G, "./testing/MST.md");
+		hardTest(25, "./testing/hardTest.md");
 	}
 	/**
 	 * Generate pseudo random graph.
@@ -31,54 +30,46 @@ public class Main{
 			G.addVertex(i);
 		}
 		for(int i = 0; i < sizeE; ++i){
-			G.addEdge(r.nextDouble(), r.nextInt(sizeV), r.nextInt(sizeV));
+			G.addEdge(r.nextInt(100), r.nextInt(sizeV), r.nextInt(sizeV));
 		}
 		return G;
 	}
 	/** Showcase of this library. */
 	public static void showcase(){
+		// Základní funkce
 		System.out.println(" + Základní funkce");
 		String importt = "./testing/import/import";
 		String petersen = "./testing/import/petersen";
 		System.out.println("Vytváření grafu pomocí importu ze souboru `" + importt + "`. A taky Petersonův graf z `" + petersen + "`.");
 		Graph G = new Graph(importt);
 		Graph H = new Graph(petersen);
-		
+		// Tisk grafu
 		System.out.println();
-		
 		System.out.println("Tisk grafu import:");
 		System.out.println(G);
-		
+		// Export graphviz dot language.
 		System.out.println();
-		
 		String exportgv = "./testing/export/export.gv";
 		String petersengv = "./testing/export/petersen.gv";
-		
 		System.out.println("Export v DOT Language do souboru `" + exportgv +"`");
 		G.exportDot(exportgv);
 		System.out.println("Export v DOT Language do souboru `" + petersengv + "`");
 		G.exportDot(petersengv);
-		
+		// Export mermaid
 		System.out.println();
-		
 		String mermaid = "./testing/export/mermaid.md";
-		
 		System.out.println("Export v Mermaid do souboru `" + mermaid + "'");
 		G.exportMermaid(mermaid);
-		
+		// Kontrakce hrany
 		System.out.println();
-		
 		String contractMermaid = "./testing/export/contract.md";
-		
 		System.out.println("Kontrakce nulté hrany. A poté tisk po kontrakci a i export v Mermaid do `"+ contractMermaid +"`");
 		G.contractEdge(0);
 		System.out.println(G);
 		G.exportMermaid(contractMermaid);
-		
+		// Souvislost
 		System.out.println();
-		
 		System.out.println(" + Souvislost");
-		
 		System.out.print("Je graf souvislý? ");
 		System.out.println(GraphAlgorithms.isConnected(G));
 		System.out.print("Je ostře souvislý? ");
@@ -86,14 +77,11 @@ public class Main{
 		System.out.print("Přidáme separátní vrchol. Je graf souvislý? ");
 		Vertex v = G.addVertex();
 		System.out.println(GraphAlgorithms.isConnected(G));
-		
+		// Minimální řezy
 		System.out.println();
-		
 		System.out.println(" + Minimální řezy");
-		
 		System.out.print("Jaký je minimální řez grafu pomocí pravděpodobnostního algoritmu? ");
 		System.out.println(MinCut.minCutProb(G));
-		
 		System.out.print("Je to nula, protože není souvislý. A co když odstraníme daný vrchol? ");
 		G.removeVertex(v);
 		System.out.println(MinCut.minCutProb(G));
@@ -101,35 +89,42 @@ public class Main{
 		System.out.println(MinCut.minCutBruteForce(G));
 		System.out.print("Jako poslední je nejideálnější (poměr rychlost a pravděpodobnost korekce) Karger's-Stein algoritmus: ");
 		System.out.println(MinCut.fastMinCut(G));
-		
+		// Vizualizace minimálního řezu
 		System.out.println();
-		
 		String minCut = "./testing/showcase/minCut.md";
-		String minCutPetersen = "./testing/showcase/minCutPeterse.md";
+		String minCutPetersen = "./testing/showcase/minCutPetersen.md";
 		System.out.println(" + Ještě generace ukázky algoritmu pro minimální řez. Jsou v `"+ minCut +"` a `"+ minCutPetersen +"`.");
-		
 		MinCut.minCutVisualize(G, minCut);
 		MinCut.minCutVisualize(H, minCutPetersen);
-		
+		// Dijkstra
 		System.out.println();
 		String dijkstra = "./testing/showcase/dijkstra.md";
 		String didijkstra = "./testing/showcase/didijkstra.md";
 		System.out.println(" + Další algoritmus je Dijkstrův algoritmus pro nejkratší cesty v grafu. Generace bude do souboru '"+ dijkstra +"' a '"+ didijkstra +"'");
-		
 		Graph D = gen(10, 30, false);
-		Dijkstra.dijkstraVisualize(D, D.getVertex(0), dijkstra);
-		
+		try{
+			Dijkstra.dijkstraVisualize(D, D.getVertex(0), dijkstra);
+		} catch(NegativeCycle nc){
+			System.err.println(nc);
+		}
 		Graph D2 = gen(10, 40, true);
-		Dijkstra.dijkstraVisualize(D2, D2.getVertex(0), didijkstra);
-		
+		try{
+			Dijkstra.dijkstraVisualize(D2, D2.getVertex(0), didijkstra);
+		} catch(NegativeCycle nc){
+			System.err.println(nc);
+		}
+		// Minimální kostra
 		Graph M = gen(10,30, false);
-		Graph M2 = gen(10,40, true);
-		
+		while(!GraphAlgorithms.isConnected(M)){
+			M = gen(10,30, false);
+		}
+		Graph M2 = gen(5,6, false);
+		Graph M3 = gen(5,6, false);
+		M2.merge(M3);
 		System.out.println();
 		String mst = "./testing/showcase/mst.md";
-		String dimst = "./testing/showcase/dimst.md";
+		String dimst = "./testing/showcase/sepmst.md";
 		System.out.println(" + Posledním algoritmem je hledání minimální kostry. Opět dva příklady jsou v `"+ mst +"` a `"+ dimst +"`.");
-		
 		MST.visualizeMST(M, mst);
 		MST.visualizeMST(M2, dimst);
 	}
@@ -146,7 +141,7 @@ public class Main{
 		try(BufferedWriter out = new BufferedWriter(new FileWriter(filePath))){
 			out.write("| Graph | Prob T | Prob R | Brute T | Brute R | KS T | KS R |\n");
 			out.write("| ----- | ------ | ------ | ------- | ------- | ---- | ---- |\n");
-			System.out.print("Hotové: ");
+			System.out.print("    Hotové: ");
 			for(int i = 0; i < MAX; ++i){
 				Graph G = gen(v, 3*v, false);
 				out.write("| [V: ");
@@ -169,7 +164,7 @@ public class Main{
 				}
 				else out.write("`x`");
 				out.write(" | ");
-				if(v < 16) out.write(Integer.toString(result));
+				if(v < 12) out.write(Integer.toString(result));
 				else out.write("`x`");
 				out.write(" | ");
 				start = clock.millis();
@@ -183,7 +178,9 @@ public class Main{
 				v += 1;
 				System.out.print("["+i+"]");
 			}
-			out.write("\n*`x` znamená, že brute force už zabere moc času a tedy už není měřený.*");
+			out.write("\n- *`x` znamená, že brute force už zabere moc času a tedy už není měřený.*\n");
+			out.write("- **R** Značí výsledek daného algoritmu.\n");
+			out.write("- **T** Značí čas daného algoritmu.\n");
 			System.out.println();
 		} catch(IOException ioe){
 			System.err.println(ioe);
