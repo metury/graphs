@@ -34,6 +34,10 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 		edges = new ArrayList<Edge>();
 		importGraph(filePath);
 	}
+	/**
+	 * Get if the graph is directed or not.
+	 * @return If the graph is directed.
+	 */
 	public boolean isDirected(){
 		return directed;
 	}
@@ -599,6 +603,10 @@ public class Graph implements Iterable<Vertex>, Cloneable{
 			}
 		};
 	}
+	/**
+	 * Switch if the graph is directed or not.
+	 * @return If the graph is directed.
+	 */
 	public boolean switchDirected(){
 		directed = !directed;
 		return directed;

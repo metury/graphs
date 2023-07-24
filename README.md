@@ -25,3 +25,7 @@ Poté zde také jsou ukázky algoritmů:
 - Také je zde ukázka algoritmu minimální kostry souvislém [grafu](project/src/testing/showcase/mst.md) a taky na nesouvislém [graf](project/src/testing/showcase/sepmst.md).
 - Poslední je tady teké výsledek [testu](project/src/testing/hardTest.md).
 - Také je zde uložený [výstup](project/src/testing/OUTPUT).
+
+## Balíček
+
+- Také je zde předem připravený `.jar` [balíček](project/graphs.jar).

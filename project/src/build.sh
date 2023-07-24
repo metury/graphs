@@ -6,6 +6,10 @@ printf " * Odstranění .class souborů -> "
 rm -f cz/cuni/mff/java/graphs/*.class
 echo "Hotovo"
 
+printf " * Generace jar suboru -> "
+jar cf ../graphs.jar cz/cuni/mff/java/graphs/*.java
+echo "Hotovo"
+
 printf " * Kompilace -> "
 javac cz/cuni/mff/java/graphs/*.java
 echo "Hotovo"
